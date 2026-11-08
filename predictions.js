@@ -546,5 +546,46 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-08",
     notes: "He frames it as a hope (\"I do hope\") and it bundles several claims, so a partial outcome is possible. Deadline: \"a few years\" read as three years."
+  },
+
+  // Source: "Elon Musk: SpaceX, Mars, Tesla Autopilot, Self-Driving, Robotics, and AI | Lex Fridman Podcast #252", YouTube, 2021-12-28.
+  {
+    id: "em-2021-fsd-level4-next-year",
+    speaker: "Elon Musk",
+    claim: "Asked when Tesla will solve level four FSD: \"I mean, it's looking quite likely that it'll be next year.\"",
+    said_on: "2021-12-28",
+    source_url: "https://www.youtube.com/watch?v=DxREm3s1scA",
+    source_time: "1:27:01",
+    deadline: "2022-12-31",
+    status: "not_happened",
+    evidence_url: "https://insideevs.com/news/618181/musk-tesla-fsd-regulator-approval-2022/",
+    checked_on: "2026-11-08",
+    notes: "At 1:28:15 he adds \"it certainly appears like we will get there next year\". In October 2022 Musk said FSD would not get regulatory approval to operate without a driver that year."
+  },
+  {
+    id: "em-2021-optimus-prototype-next-year",
+    speaker: "Elon Musk",
+    claim: "We'll probably have, I don't know, a decent prototype towards the end of next year or something like that.",
+    said_on: "2021-12-28",
+    source_url: "https://www.youtube.com/watch?v=DxREm3s1scA",
+    source_time: "1:46:06",
+    deadline: "2022-12-31",
+    status: "happened",
+    evidence_url: "https://www.designboom.com/technology/tesla-ai-day-2022-optimus-bot-prototype-demo-10-03-2022/",
+    checked_on: "2026-11-08",
+    notes: "About the Tesla Bot (Optimus). Tesla showed a prototype at AI Day on September 30, 2022."
+  },
+  {
+    id: "em-2021-human-on-mars-5-10y",
+    speaker: "Elon Musk",
+    claim: "Asked when SpaceX will land a human being on Mars: \"Best case is about five years, worst case 10 years.\"",
+    said_on: "2021-12-28",
+    source_url: "https://www.youtube.com/watch?v=DxREm3s1scA",
+    source_time: "27:43",
+    deadline: "2031-12-28",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Deadline is the worst case, ten years after publication. The best case, five years, ends on 2026-12-28."
   }
 ];
