@@ -19,6 +19,8 @@
  *                 Set it to the current date whenever you set or change status.
  *   notes         One or two sentences: what matched or did not match.
  *                 Mention here any field left empty because it is unknown.
+ *   chain         Optional. Id from CHAINS below, shared by records where the speaker
+ *                 makes the same promise at different times. Leave it out otherwise.
  *
  * Example (shape only, not a real record):
  *
@@ -36,6 +38,13 @@
  *     notes: "Timestamp unknown."
  *   }
  */
+// Repeated promises: the same claim made at different times. Records point here with `chain`.
+const CHAINS = {
+  "fsd-driverless": "Self-driving with no one at the wheel",
+  "optimus-prototype": "Optimus humanoid robot prototype",
+  "humans-to-mars": "People flying to Mars"
+};
+
 const PREDICTIONS = [
   // Source: "The full-length interview with Elon Musk | The Economist", YouTube, published 2026-07-29.
   {
@@ -189,6 +198,7 @@ const PREDICTIONS = [
   {
     id: "em-2022-fsd-solved-this-year",
     speaker: "Elon Musk",
+    chain: "fsd-driverless",
     claim: "I actually am confident that we will solve it this year… The probability of an accident, at what point do you exceed that of the average person? I think we will exceed that this year.",
     said_on: "2022-04-18",
     source_url: "https://www.youtube.com/watch?v=YRvf00NooN8",
@@ -202,6 +212,7 @@ const PREDICTIONS = [
   {
     id: "em-2022-optimus-prototype-this-year",
     speaker: "Elon Musk",
+    chain: "optimus-prototype",
     claim: "I think we'll have like an interesting prototype sometime this year.",
     said_on: "2022-04-18",
     source_url: "https://www.youtube.com/watch?v=YRvf00NooN8",
@@ -321,6 +332,7 @@ const PREDICTIONS = [
   {
     id: "em-2017-la-ny-autonomous-2017",
     speaker: "Elon Musk",
+    chain: "fsd-driverless",
     claim: "I think we're still on track for being able to go cross-country from LA to New York by the end of the year, fully autonomous… no controls touched at any point during the entire journey.",
     said_on: "2017-05-03",
     source_url: "https://www.youtube.com/watch?v=zIwLWfaAg-8",
@@ -334,6 +346,7 @@ const PREDICTIONS = [
   {
     id: "em-2017-sleep-in-car-two-years",
     speaker: "Elon Musk",
+    chain: "fsd-driverless",
     claim: "Asked, leaving regulation aside, how far away it is to buy a Tesla, take your hands off the wheel, go to sleep and arrive safely: \"I think that's about two years.\"",
     said_on: "2017-05-03",
     source_url: "https://www.youtube.com/watch?v=zIwLWfaAg-8",
@@ -373,6 +386,7 @@ const PREDICTIONS = [
   {
     id: "em-2017-mars-ship-boarding-8-10y",
     speaker: "Elon Musk",
+    chain: "humans-to-mars",
     claim: "Asked when people will be walking into the Interplanetary Transport System rocket: \"I'm hopeful it's sort of an eight- to 10-year time frame. Aspirationally, that's our target.\"",
     said_on: "2017-05-03",
     source_url: "https://www.youtube.com/watch?v=zIwLWfaAg-8",
@@ -552,6 +566,7 @@ const PREDICTIONS = [
   {
     id: "em-2021-fsd-level4-next-year",
     speaker: "Elon Musk",
+    chain: "fsd-driverless",
     claim: "Asked when Tesla will solve level four FSD: \"I mean, it's looking quite likely that it'll be next year.\"",
     said_on: "2021-12-28",
     source_url: "https://www.youtube.com/watch?v=DxREm3s1scA",
@@ -565,6 +580,7 @@ const PREDICTIONS = [
   {
     id: "em-2021-optimus-prototype-next-year",
     speaker: "Elon Musk",
+    chain: "optimus-prototype",
     claim: "We'll probably have, I don't know, a decent prototype towards the end of next year or something like that.",
     said_on: "2021-12-28",
     source_url: "https://www.youtube.com/watch?v=DxREm3s1scA",
@@ -578,6 +594,7 @@ const PREDICTIONS = [
   {
     id: "em-2021-human-on-mars-5-10y",
     speaker: "Elon Musk",
+    chain: "humans-to-mars",
     claim: "Asked when SpaceX will land a human being on Mars: \"Best case is about five years, worst case 10 years.\"",
     said_on: "2021-12-28",
     source_url: "https://www.youtube.com/watch?v=DxREm3s1scA",

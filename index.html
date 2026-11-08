@@ -103,6 +103,39 @@
   }
 
   .counts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; padding: 0; list-style: none; }
+  .count.s-overdue { background: transparent; color: var(--warn-fg); border-color: var(--warn-fg); }
+  .count.s-overdue[aria-pressed="true"] { background: var(--not-bg); }
+  .summary {
+    margin: 0 0 14px; padding: 12px 14px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  }
+  .summary:empty { display: none; }
+  .chain-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin: 0 0 12px; padding: 3px 10px;
+    font: inherit; font-size: 0.82rem; font-weight: 600;
+    color: var(--accent); background: transparent;
+    border: 1px dashed var(--accent); border-radius: 999px; cursor: pointer;
+  }
+  .chain-chip:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .chain-chip.is-static { cursor: default; border-style: solid; }
+  .chain-banner { margin: 24px 0 14px; scroll-margin-top: 72px; }
+  .chain-kicker { margin: 0 0 4px; font-size: 0.8rem; font-weight: 600; color: var(--accent); }
+  .chain-title { margin: 0 0 6px; font-size: 1.35rem; line-height: 1.2; }
+  .chain-sub { margin: 0 0 12px; font-size: 0.9rem; color: var(--muted); }
+  .chain-back {
+    font: inherit; font-size: 0.85rem; cursor: pointer;
+    color: var(--text); background: var(--surface);
+    border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px;
+  }
+  .sum-head { margin: 0 0 8px; font-size: 0.95rem; }
+  .sum-bar { display: flex; height: 8px; border-radius: 999px; overflow: hidden; background: var(--border); margin: 0 0 6px; }
+  .sum-seg { display: block; height: 100%; }
+  .sum-seg.s-happened { background: var(--happened-fg); }
+  .sum-seg.s-partial { background: var(--partial-fg); }
+  .sum-seg.s-not_happened { background: var(--not-fg); }
+  .sum-line { margin: 0; font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .sum-line + .sum-line { margin-top: 2px; }
   .count {
     font: inherit; font-size: 0.85rem; cursor: pointer;
     display: inline-flex; align-items: center; gap: 6px;
@@ -223,6 +256,10 @@
       </div>
     </div>
 
+    <h2 class="sr-only">Summary</h2>
+    <div class="chain-banner" id="chain-banner" hidden></div>
+    <section class="summary" id="summary"></section>
+
     <h2 class="sr-only">Counts by status</h2>
     <ul class="counts" id="counts"></ul>
 
@@ -297,6 +334,7 @@
   }
 
   // ---------- normalise + validate ----------
+  var CHAIN_TITLES = (typeof CHAINS !== "undefined" && CHAINS) ? CHAINS : {};
   var seen = {};
   var records = data.map(function (r, i) {
     r = r || {};
@@ -304,9 +342,10 @@
       id: str(r.id), speaker: str(r.speaker), claim: str(r.claim),
       said_on: str(r.said_on), source_url: safeUrl(r.source_url), source_time: str(r.source_time),
       deadline: str(r.deadline), status: str(r.status), evidence_url: safeUrl(r.evidence_url),
-      checked_on: str(r.checked_on), notes: str(r.notes), problems: []
+      checked_on: str(r.checked_on), notes: str(r.notes), chain: str(r.chain), problems: []
     };
     var tag = rec.id || ("#" + i);
+    if (rec.chain && !CHAIN_TITLES[rec.chain]) { rec.problems.push("unknown chain \"" + rec.chain + "\""); rec.chain = ""; }
     if (!rec.id) rec.problems.push("missing id");
     else if (seen[rec.id]) rec.problems.push("duplicate id");
     seen[rec.id] = true;
@@ -340,10 +379,53 @@
   speakers.sort(function (a, b) { return a.localeCompare(b); });
   speakers.forEach(function (s) { fSpeaker.appendChild(el("option", { value: s }, s)); });
   STATUSES.forEach(function (s) { fStatus.appendChild(el("option", { value: s.key }, s.label)); });
+  fStatus.appendChild(el("option", { value: "overdue" }, "Overdue, awaiting check"));
+
+  // Open (pending / too early) and its deadline is already behind us.
+  var TODAY = todayISO();
+  function isOverdue(r) {
+    return !NEEDS_EVIDENCE[r.status] && isDate(r.deadline) && r.deadline < TODAY;
+  }
+
+  // ---------- summary ----------
+  var summaryEl = document.getElementById("summary");
+  function renderSummary(pool, speaker) {
+    summaryEl.textContent = "";
+    if (!pool.length) return;
+    var n = function (k) { return pool.filter(function (r) { return r.status === k; }).length; };
+    var hap = n("happened"), par = n("partial"), not = n("not_happened");
+    var checked = hap + par + not;
+    var overdue = pool.filter(isOverdue).length;
+    var open = pool.length - checked - overdue;
+
+    var head = el("p", { "class": "sum-head" });
+    head.appendChild(el("b", null, speaker || "All speakers"));
+    head.appendChild(document.createTextNode(" · " + pool.length + (pool.length === 1 ? " prediction" : " predictions")));
+    summaryEl.appendChild(head);
+
+    if (checked) {
+      var bar = el("div", { "class": "sum-bar", role: "img",
+        "aria-label": "Of " + checked + " checked: " + hap + " came true, " + par + " partly, " + not + " did not" });
+      [["happened", hap], ["partial", par], ["not_happened", not]].forEach(function (p) {
+        if (!p[1]) return;
+        var seg = el("span", { "class": "sum-seg s-" + p[0] });
+        seg.style.width = (p[1] / checked * 100) + "%";
+        bar.appendChild(seg);
+      });
+      summaryEl.appendChild(bar);
+      summaryEl.appendChild(el("p", { "class": "sum-line" },
+        "Of " + checked + " checked: " + hap + " came true · " + par + " partly · " + not + " did not"));
+    } else {
+      summaryEl.appendChild(el("p", { "class": "sum-line" }, "Nothing checked yet."));
+    }
+    summaryEl.appendChild(el("p", { "class": "sum-line" },
+      overdue + " overdue, awaiting check · " + open + " still open"));
+  }
 
   // ---------- render ----------
   function renderCounts(pool) {
     countsEl.textContent = "";
+    var overdueN = pool.filter(isOverdue).length;
     STATUSES.forEach(function (s) {
       var n = pool.filter(function (r) { return r.status === s.key; }).length;
       var li = el("li");
@@ -361,6 +443,22 @@
       li.appendChild(btn);
       countsEl.appendChild(li);
     });
+    if (overdueN) {
+      var li = el("li");
+      var ob = el("button", {
+        type: "button", "class": "count s-overdue",
+        "aria-pressed": fStatus.value === "overdue" ? "true" : "false",
+        title: "Show only predictions whose deadline has passed but are not checked yet"
+      });
+      ob.appendChild(el("span", null, "Overdue"));
+      ob.appendChild(el("b", null, String(overdueN)));
+      ob.addEventListener("click", function () {
+        fStatus.value = fStatus.value === "overdue" ? "" : "overdue";
+        render();
+      });
+      li.appendChild(ob);
+      countsEl.appendChild(li);
+    }
   }
 
   // ---------- source link with timestamp ----------
@@ -417,7 +515,7 @@
     return wrap;
   }
 
-  function card(r, today) {
+  function card(r, today, posInChain) {
     var li = el("li", { "class": "card", id: r.id ? "p-" + r.id : null });
 
     var head = el("div", { "class": "card-head" });
@@ -426,6 +524,8 @@
     li.appendChild(head);
 
     li.appendChild(el("blockquote", { "class": "claim" }, "“" + (r.claim || "") + "”"));
+    var chip = chainChip(r, posInChain);
+    if (chip) li.appendChild(chip);
 
     var dl = el("dl", { "class": "meta" });
     function row(label, content) {
@@ -489,23 +589,79 @@
     statsEl.hidden = false;
   }
 
+  // ---------- chains (repeated promises) ----------
+  var chainCount = {};
+  records.forEach(function (r) { if (r.chain) chainCount[r.chain] = (chainCount[r.chain] || 0) + 1; });
+  var chainBanner = document.getElementById("chain-banner");
+  var controlsEl = document.querySelector(".controls");
+  function chainFromHash() {
+    var m = /^#chain=([A-Za-z0-9_-]+)$/.exec(location.hash);
+    return m && chainCount[m[1]] ? m[1] : "";
+  }
+  var activeChain = chainFromHash();
+  window.addEventListener("hashchange", function () {
+    activeChain = chainFromHash();
+    render();
+    if (activeChain) chainBanner.scrollIntoView({ block: "start" });
+  });
+  function openChain(c) { location.hash = "chain=" + c; }
+  function closeChain() {
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { location.hash = ""; }
+    activeChain = "";
+    render();
+  }
+  function chainChip(r, posInChain) {
+    var n = chainCount[r.chain];
+    if (!r.chain || n < 2) return null;
+    var text = "🔁 " + (posInChain ? "Statement " + posInChain + " of " + n : "Repeated promise · said " + n + " times");
+    if (posInChain) return el("p", { "class": "chain-chip is-static" }, text);
+    var b = el("button", { type: "button", "class": "chain-chip", title: "See every time this was promised: " + CHAIN_TITLES[r.chain] }, text);
+    b.addEventListener("click", function () { openChain(r.chain); });
+    return b;
+  }
+  function renderChainBanner(pool) {
+    chainBanner.textContent = "";
+    if (!activeChain) { chainBanner.hidden = true; return; }
+    chainBanner.hidden = false;
+    chainBanner.appendChild(el("p", { "class": "chain-kicker" }, "🔁 Repeated promise"));
+    chainBanner.appendChild(el("h2", { "class": "chain-title" }, CHAIN_TITLES[activeChain]));
+    var first = pool[0], last = pool[pool.length - 1];
+    chainBanner.appendChild(el("p", { "class": "chain-sub" },
+      "Said " + pool.length + " times, from " + fmtDate(first.said_on) + " to " + fmtDate(last.said_on) + ". Oldest first."));
+    var back = el("button", { type: "button", "class": "chain-back" }, "← All predictions");
+    back.addEventListener("click", closeChain);
+    chainBanner.appendChild(back);
+  }
+
   function render() {
     var sp = fSpeaker.value, st = fStatus.value;
-    var bySpeaker = records.filter(function (r) { return !sp || r.speaker === sp; });
-    var shown = bySpeaker.filter(function (r) { return !st || r.status === st; });
-    // Hottest = most reactions in total first. records are already newest-first and sort is stable,
-    // so ties stay newest-first. Without reactions the order is simply newest-first.
-    // Cards are not re-sorted when someone reacts, so nothing jumps under the cursor.
-    if (likes.ready && fSort.value === "hot") {
-      shown = shown.slice().sort(function (a, b) { return totalReactions(b.id) - totalReactions(a.id); });
+    var bySpeaker, shown;
+    if (activeChain) {
+      // Chain view: every statement of one promise, oldest first; other filters are set aside.
+      bySpeaker = records.filter(function (r) { return r.chain === activeChain; })
+        .sort(function (a, b) { return a.said_on < b.said_on ? -1 : a.said_on > b.said_on ? 1 : 0; });
+      shown = bySpeaker;
+    } else {
+      bySpeaker = records.filter(function (r) { return !sp || r.speaker === sp; });
+      shown = bySpeaker.filter(function (r) { return !st || (st === "overdue" ? isOverdue(r) : r.status === st); });
+      // Hottest = most reactions in total first. records are already newest-first and sort is stable,
+      // so ties stay newest-first. Without reactions the order is simply newest-first.
+      // Cards are not re-sorted when someone reacts, so nothing jumps under the cursor.
+      if (likes.ready && fSort.value === "hot") {
+        shown = shown.slice().sort(function (a, b) { return totalReactions(b.id) - totalReactions(a.id); });
+      }
     }
 
+    renderChainBanner(shown);
+    controlsEl.hidden = !!activeChain;
+    countsEl.hidden = !!activeChain;
+    renderSummary(bySpeaker, activeChain ? "This promise" : sp);
     renderCounts(bySpeaker);
 
     listEl.textContent = "";
     var today = todayISO();
     var frag = document.createDocumentFragment();
-    shown.forEach(function (r) { frag.appendChild(card(r, today)); });
+    shown.forEach(function (r, i) { frag.appendChild(card(r, today, activeChain ? i + 1 : 0)); });
     listEl.appendChild(frag);
 
     if (!records.length) {

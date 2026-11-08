@@ -36,7 +36,25 @@ Rules:
 - Set `checked_on` to the current date whenever you set or change `status`.
 - Keep `notes` to what the sources show, with no judgements about the speaker.
 
-The Speaker filter is built from the data, so a speaker appears there once they have at least one record. The page logs a console warning (and shows a red note on the card) for a duplicate id, an unknown status, a bad date format, a non-http link, or an outcome status with no evidence link.
+### Repeated promises (chains)
+
+When a speaker makes the same promise at different times, give those records the same optional `chain` id and add its title to `CHAINS` at the top of `predictions.js`:
+
+```js
+const CHAINS = {
+  "fsd-driverless": "Self-driving with no one at the wheel"
+};
+// in each record of that promise:
+chain: "fsd-driverless",
+```
+
+Each card in a chain gets a "Repeated promise · said N times" button. It opens a view with every statement of that promise, oldest first, at `#chain=<id>`; that link can be shared. Only link records that repeat the same promise, not just the same topic.
+
+### What the page shows
+
+The summary above the list counts, for all speakers or the selected one, how many predictions were checked and how they turned out, and how many are overdue (deadline passed, still `pending` or `too_early`). The **Overdue** chip and status option list those. Each card also shows a bar for the time between the statement and its deadline, and YouTube source links open at `source_time`.
+
+The Speaker filter is built from the data, so a speaker appears there once they have at least one record. The page logs a console warning (and shows a red note on the card) for a duplicate id, an unknown status, an unknown chain, a bad date format, a non-http link, or an outcome status with no evidence link.
 
 ## Check locally
 
