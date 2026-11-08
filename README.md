@@ -76,6 +76,8 @@ and go to http://localhost:8000. Open the developer console and confirm there ar
 2. In the repository go to **Settings → Pages**, set **Source** to *Deploy from a branch*, pick `main` and `/ (root)`, and save.
 3. After a minute the site is live at `https://<user>.github.io/<repo>/`.
 
+This site uses its own domain, **https://saidanddone.fyi** (bought through Cloudflare Registrar). The `CNAME` file in the repo root holds it, and the Cloudflare DNS zone has four `A` and four `AAAA` records for the root pointing at GitHub Pages, plus `www` as a `CNAME` to `dzmitry23bel.github.io`, all DNS only (grey cloud) so GitHub can issue the certificate. The old `dzmitry23bel.github.io/said_and_done/` address redirects to the domain. If the domain ever changes, also update `ALLOWED_ORIGINS` and `PREDICTIONS_URL` in `worker/wrangler.toml` and deploy the Worker.
+
 Every commit to `predictions.js` updates the site. Pick a neutral repository name; don't use any speaker's name in it.
 
 ## Brand
@@ -181,7 +183,7 @@ npx wrangler d1 execute said-and-done-likes --remote --command "DELETE FROM mess
 
 ### If spam gets through: Turnstile (off by default)
 
-1. In the Cloudflare dashboard create a Turnstile widget for `dzmitry23bel.github.io` (mode: Invisible or Managed).
+1. In the Cloudflare dashboard create a Turnstile widget for `saidanddone.fyi` (mode: Invisible or Managed).
 2. `npx wrangler secret put TURNSTILE_SECRET` with its secret key.
 3. Put its site key in `index.html` as `TURNSTILE_SITEKEY` and push.
 

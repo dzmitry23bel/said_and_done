@@ -4,9 +4,9 @@ compatibility_date = "2026-10-01"
 
 [vars]
 # Sites allowed to call the API from a browser, comma-separated.
-ALLOWED_ORIGINS = "https://dzmitry23bel.github.io"
+ALLOWED_ORIGINS = "https://saidanddone.fyi,https://dzmitry23bel.github.io"
 # Published data file; the Worker accepts likes only for ids found here.
-PREDICTIONS_URL = "https://dzmitry23bel.github.io/said_and_done/predictions.js"
+PREDICTIONS_URL = "https://saidanddone.fyi/predictions.js"
 # "true" stops all new likes and unlikes (counts stay visible).
 LIKES_FROZEN = "false"
 # "true" stops new visitor messages.
