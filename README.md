@@ -100,6 +100,8 @@ Visitors can like a prediction. Counts are shared and stored by a small Cloudfla
 
 ### First-time setup
 
+**Already done for this repo:** the Worker runs at `https://said-and-done-likes.saidanddone.workers.dev` and `LIKES_API` points to it. The steps below are for setting it up again from scratch.
+
 Needs Node.js 18+ (`winget install OpenJS.NodeJS.LTS` on Windows) and a free Cloudflare account. Run in `worker/`:
 
 ```bash
@@ -115,7 +117,7 @@ npx wrangler secret put LIKE_SECRET
 npx wrangler deploy
 ```
 
-For `LIKE_SECRET` paste any long random string (e.g. from a password generator) and don't share it. `deploy` prints the Worker URL, like `https://said-and-done-likes.<name>.workers.dev`. Put it in `index.html` as `LIKES_API` (no trailing slash) and push.
+For `LIKE_SECRET` paste any long random string and don't share it. On Windows, `worker\set-secret.cmd` generates one and uploads it without showing it. Wrangler is a local dependency of `worker/` (`npm install` there first); `npx wrangler` uses it. `deploy` prints the Worker URL, like `https://said-and-done-likes.<name>.workers.dev`. Put it in `index.html` as `LIKES_API` (no trailing slash) and push.
 
 GitHub Pages must be on: the Worker reads ids from `PREDICTIONS_URL`.
 

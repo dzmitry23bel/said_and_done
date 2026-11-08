@@ -13,7 +13,7 @@ LIKES_FROZEN = "false"
 [[d1_databases]]
 binding = "DB"
 database_name = "said-and-done-likes"
-database_id = "PASTE_DATABASE_ID_HERE"
+database_id = "9f3acf4f-1ab3-4231-8292-163533a7db0b"
 
 # At most 10 like/unlike requests per IP per minute.
 [[ratelimits]]
