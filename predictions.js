@@ -518,5 +518,33 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-08",
     notes: "Deadline is five years after publication. \"Understanding the biological machine\" has no clear test, so the outcome will be hard to judge."
+  },
+
+  // Source: "NVIDIA CEO Jensen Huang's Vision for the Future" (Huge If True), YouTube, 2025-01-27.
+  {
+    id: "jh-2025-superhuman-intelligence-decade",
+    speaker: "Jensen Huang",
+    claim: "The next decade intelligence, not for everything but for some things, would basically become superhuman.",
+    said_on: "2025-01-27",
+    source_url: "https://www.youtube.com/watch?v=7ARBJQn6QkM",
+    source_time: "50:13",
+    deadline: "2035-01-27",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Deadline is ten years after publication. He does not say which things or what counts as superhuman."
+  },
+  {
+    id: "jh-2025-look-back-few-years",
+    speaker: "Jensen Huang",
+    claim: "When we look back in a few years… the whole field of digital biology and life sciences has been transformed. Our whole understanding of material sciences has completely been revolutionized. That robots are helping us do dangerous and mundane things all over the place. That if we wanted to drive we can drive but otherwise… take a nap…",
+    said_on: "2025-01-27",
+    source_url: "https://www.youtube.com/watch?v=7ARBJQn6QkM",
+    source_time: "1:01:40",
+    deadline: "2028-01-27",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "He frames it as a hope (\"I do hope\") and it bundles several claims, so a partial outcome is possible. Deadline: \"a few years\" read as three years."
   }
 ];
