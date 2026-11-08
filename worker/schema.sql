@@ -30,3 +30,17 @@ CREATE TABLE IF NOT EXISTS reaction_counts (
   n       INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (pred_id, kind)
 ) WITHOUT ROWID;
+
+-- Visitor messages. Same as migrations/0003_messages.sql.
+CREATE TABLE IF NOT EXISTS messages (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_at INTEGER NOT NULL,
+  pred_id    TEXT,
+  topic      TEXT    NOT NULL,
+  body       TEXT    NOT NULL,
+  link       TEXT,
+  voter      TEXT    NOT NULL,
+  status     TEXT    NOT NULL DEFAULT 'new'
+);
+CREATE INDEX IF NOT EXISTS messages_voter_time ON messages (voter, created_at);
+CREATE INDEX IF NOT EXISTS messages_time ON messages (created_at);

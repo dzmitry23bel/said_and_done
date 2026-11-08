@@ -10,6 +10,13 @@
  *   GET  /likes                     -> { counts: { "<id>": n } }      (the "like" reaction)
  *   POST /like { id, action: "like" | "unlike" } -> { id, count, liked }
  *
+ * Visitor messages ("Report a problem" on a card, Contact form). Stored in D1, read by the admin
+ * with wrangler (see README). No email or name is collected.
+ *   POST /message { id?, topic, text, link?, website?, turnstile? } -> { ok: true }
+ *        topic: "wrong_quote" | "outcome" | "dates" | "suggest" | "site" | "other"
+ *        text: 10-2000 characters; link: optional http(s) URL; website: honeypot, must be empty
+ *   Limits: 3 per IP per minute (MSG_LIMITER), 5 per network per day, 300 in total per day.
+ *
  * Spam protection:
  *   - only ids that exist in the published predictions.js are accepted;
  *   - one reaction of each kind per network per prediction: we store HMAC(secret, ip|id),
@@ -47,6 +54,10 @@ export default {
 
       if (request.method === "POST" && url.pathname === "/react") {
         return await handleReact(request, env, cors, false);
+      }
+
+      if (request.method === "POST" && url.pathname === "/message") {
+        return await handleMessage(request, env, cors);
       }
 
       // Legacy endpoints for the old like button.
@@ -118,6 +129,75 @@ async function handleReact(request, env, cors, legacy) {
   return legacy
     ? json({ id, count, liked: add }, 200, cors)
     : json({ id, kind, count, active: add }, 200, cors);
+}
+
+// ---------- visitor messages ----------
+const TOPICS = ["wrong_quote", "outcome", "dates", "suggest", "site", "other"];
+const MSG_MIN = 10, MSG_MAX = 2000, LINK_MAX = 500;
+const PER_NETWORK_PER_DAY = 5, ALL_PER_DAY = 300;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+async function handleMessage(request, env, cors) {
+  if (env.MESSAGES_FROZEN === "true") return json({ error: "frozen" }, 503, cors);
+
+  const ip = request.headers.get("CF-Connecting-IP") || "";
+  if (!ip) return json({ error: "no_ip" }, 400, cors);
+
+  if (env.MSG_LIMITER) {
+    const { success } = await env.MSG_LIMITER.limit({ key: ip });
+    if (!success) return json({ error: "rate_limited" }, 429, cors);
+  }
+
+  const raw = await request.text();
+  if (raw.length > 8000) return json({ error: "too_large" }, 413, cors);
+  let body;
+  try { body = JSON.parse(raw); } catch { return json({ error: "bad_json" }, 400, cors); }
+  if (!body || typeof body !== "object") return json({ error: "bad_json" }, 400, cors);
+
+  // Honeypot: a field people never see. Bots that fill it get a normal-looking reply, nothing is stored.
+  if (typeof body.website === "string" && body.website.trim()) return json({ ok: true }, 200, cors);
+
+  const topic = TOPICS.includes(body.topic) ? body.topic : "";
+  const text = clean(body.text);
+  const link = clean(body.link);
+  const id = typeof body.id === "string" && body.id ? body.id : "";
+  if (!topic) return json({ error: "bad_topic" }, 400, cors);
+  if (text.length < MSG_MIN || text.length > MSG_MAX) return json({ error: "bad_length" }, 400, cors);
+  if (link && (link.length > LINK_MAX || !/^https?:\/\/[^\s]+$/i.test(link))) return json({ error: "bad_link" }, 400, cors);
+  if (id && !ID_RE.test(id)) return json({ error: "bad_request" }, 400, cors);
+
+  if (env.TURNSTILE_SECRET) {
+    const ok = await verifyTurnstile(env.TURNSTILE_SECRET, body.turnstile, ip);
+    if (!ok) return json({ error: "turnstile_failed" }, 403, cors);
+  }
+
+  if (id) {
+    const ids = await validIds(env);
+    if (!ids) return json({ error: "ids_unavailable" }, 503, cors);
+    if (!ids.has(id)) return json({ error: "unknown_id" }, 404, cors);
+  }
+
+  if (!env.LIKE_SECRET) return json({ error: "not_configured" }, 500, cors);
+  const now = Date.now();
+  // The day is part of the code, so the same network gets a different code every day.
+  const voter = await hmac(env.LIKE_SECRET, ip + "|msg|" + Math.floor(now / DAY_MS));
+
+  const [mine, all] = await env.DB.batch([
+    env.DB.prepare("SELECT COUNT(*) AS n FROM messages WHERE voter = ?1 AND created_at > ?2").bind(voter, now - DAY_MS),
+    env.DB.prepare("SELECT COUNT(*) AS n FROM messages WHERE created_at > ?1").bind(now - DAY_MS),
+  ]);
+  if (mine.results[0].n >= PER_NETWORK_PER_DAY) return json({ error: "daily_limit" }, 429, cors);
+  if (all.results[0].n >= ALL_PER_DAY) return json({ error: "busy" }, 503, cors);
+
+  await env.DB.prepare(
+    "INSERT INTO messages (created_at, pred_id, topic, body, link, voter) VALUES (?1, ?2, ?3, ?4, ?5, ?6)"
+  ).bind(now, id || null, topic, text, link || null, voter).run();
+  return json({ ok: true }, 200, cors);
+}
+
+// Trim, drop control characters except newlines and tabs.
+function clean(v) {
+  return typeof v === "string" ? v.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim() : "";
 }
 
 // Ids from the published predictions.js, cached for a few minutes per isolate.

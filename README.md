@@ -2,7 +2,7 @@
 
 *What was said. What happened.*
 
-A static page that lists public statements about the future, each with a link to its source and a status checked against public evidence. Two files: `index.html` (layout, styles, rendering) and `predictions.js` (the data). No server, no libraries, no tracking.
+A static page that lists public statements about the future, each with a link to its source and a status checked against public evidence. Two files: `index.html` (layout, styles, rendering) and `predictions.js` (the data). No libraries, no tracking. Reactions and visitor messages go to a small Cloudflare Worker in `worker/`; without it the page still works.
 
 ## Add a record
 
@@ -154,6 +154,29 @@ npx wrangler d1 execute said-and-done-likes --remote --command "DELETE FROM reac
 
 # see counts
 npx wrangler d1 execute said-and-done-likes --remote --command "SELECT * FROM reaction_counts ORDER BY n DESC;"
+```
+
+## Messages from visitors
+
+Each card has a **Report a problem** button (wrong quote or source, evidence of the outcome, wrong date, other), and the header and footer have **Contact** (suggest a prediction, a problem with the site, other). Both open the same form: topic, message (10–2000 characters) and an optional link. The form shows only when `LIKES_API` is set.
+
+Messages go to the same Worker and are stored in its D1 database (`messages` table); nothing is sent to a third-party service. No name or email is asked for, so there is no way to reply. What is stored: time, the card id (if any), topic, text, link, and a one-way code `HMAC(secret, ip|msg|day)` that changes every day and is used only for the daily cap.
+
+**Spam protection:** 3 messages per IP per minute (`MSG_LIMITER`), 5 per network per day, 300 in total per day; a hidden honeypot field (bots that fill it get "ok" and nothing is stored); card ids must exist in `predictions.js`; links must be http(s); `ALLOWED_ORIGINS`; Turnstile too, if turned on. `MESSAGES_FROZEN = "true"` in `wrangler.toml` stops new messages.
+
+A message never changes a record by itself. Check it against the sources first, like any other change.
+
+**API:** `POST /message` with `{id?, topic, text, link?, website}`, where `topic` is one of `wrong_quote`, `outcome`, `dates`, `suggest`, `site`, `other` and `website` is the honeypot (must be empty). Set up with `migrations/0003_messages.sql`.
+
+```bash
+# new messages, oldest first
+npx wrangler d1 execute said-and-done-likes --remote --command "SELECT id, datetime(created_at/1000,'unixepoch') AS at, pred_id, topic, body, link FROM messages WHERE status='new' ORDER BY id;"
+
+# mark one as handled
+npx wrangler d1 execute said-and-done-likes --remote --command "UPDATE messages SET status='done' WHERE id=N;"
+
+# delete handled messages older than 90 days
+npx wrangler d1 execute said-and-done-likes --remote --command "DELETE FROM messages WHERE status='done' AND created_at < (strftime('%s','now')-90*86400)*1000;"
 ```
 
 ### If spam gets through: Turnstile (off by default)

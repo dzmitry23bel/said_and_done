@@ -182,7 +182,49 @@
   .tl-not_happened .tl-fill { background: var(--not-fg); }
   .tl-label { margin-top: 5px; font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
   .warn { color: var(--warn-fg); font-size: 0.85rem; }
-  .card-foot { display: flex; justify-content: flex-start; margin-top: 12px; }
+  .card-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; margin-top: 12px; }
+  .report-btn {
+    font: inherit; font-size: 0.82rem; cursor: pointer; margin-left: auto;
+    color: var(--muted); background: transparent; border: 0; padding: 4px 0;
+    text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--border);
+  }
+  .report-btn:hover { color: var(--text); text-decoration-color: currentColor; }
+  .contact-btn {
+    font: inherit; font-size: 0.9rem; cursor: pointer; margin-left: auto;
+    color: var(--muted); background: transparent; border: 0; padding: 6px 8px; border-radius: 8px;
+  }
+  .contact-btn:hover { color: var(--text); }
+  .link-btn { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+  .msg-dialog {
+    width: min(520px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto;
+    color: var(--text); background: var(--surface);
+    border: 1px solid var(--border); border-radius: 14px; padding: 20px;
+  }
+  .msg-dialog::backdrop { background: rgba(0, 0, 0, 0.6); }
+  .msg-dialog h2 { margin: 0 0 6px; font-size: 1.15rem; }
+  .msg-about { margin: 0 0 14px; font-size: 0.88rem; color: var(--muted); overflow-wrap: anywhere; }
+  .msg-form { display: grid; gap: 12px; }
+  .msg-form label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; }
+  .msg-form select, .msg-form textarea, .msg-form input {
+    width: 100%; box-sizing: border-box; font: inherit; color: var(--text); background: var(--bg);
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
+  }
+  .msg-form textarea { min-height: 120px; resize: vertical; }
+  .msg-form select:focus, .msg-form textarea:focus, .msg-form input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .msg-hint { margin: 4px 0 0; font-size: 0.78rem; color: var(--muted); }
+  .msg-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .msg-privacy { margin: 0; font-size: 0.8rem; color: var(--muted); }
+  .msg-actions { display: flex; justify-content: flex-end; gap: 8px; }
+  .msg-actions button {
+    font: inherit; font-size: 0.92rem; cursor: pointer; border-radius: 8px; padding: 8px 14px;
+    border: 1px solid var(--border); background: transparent; color: var(--text);
+  }
+  .msg-actions .primary { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 600; }
+  .msg-actions button:disabled { opacity: 0.6; cursor: progress; }
+  .msg-status { margin: 0; font-size: 0.88rem; min-height: 1.2em; }
+  .msg-status.is-error { color: var(--warn-fg); }
+  .msg-status.is-ok { color: var(--happened-fg); }
   .reactions { display: flex; flex-wrap: wrap; gap: 6px; }
   .react {
     font: inherit; font-size: 0.85rem; cursor: pointer;
@@ -219,6 +261,7 @@
       </svg>
       <span>Said <span class="amp">&amp;</span> Done</span>
     </a>
+    <button type="button" class="contact-btn" id="contact-btn" hidden>Contact</button>
     <button type="button" class="icon-btn" id="theme-btn" aria-label="Switch to light theme" title="Switch to light theme">
       <svg class="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
         <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
@@ -272,8 +315,39 @@
   <footer>
     <p>Independent project. Not affiliated with, endorsed by, or produced by any person named here. Quotes are taken from the linked sources; status reflects the evidence shown and the date it was checked.</p>
     <p id="likes-note" hidden>Reactions are anonymous: no accounts, no cookies, no analytics. To count each reaction once per network, the server keeps a one-way code made from your IP address and the prediction; the address itself is never stored. Reactions show what visitors think; they do not change a prediction&#39;s status.</p>
+    <p id="contact-note" hidden>Spotted a wrong quote, have evidence of an outcome, or know a prediction we missed? Use “Report a problem” on a card, or <button type="button" class="link-btn" id="contact-link">send us a message</button>.</p>
   </footer>
   <div id="ts-box" hidden></div>
+
+  <dialog class="msg-dialog" id="msg-dialog" aria-labelledby="msg-title">
+    <h2 id="msg-title">Report a problem</h2>
+    <p class="msg-about" id="msg-about"></p>
+    <form class="msg-form" id="msg-form" novalidate>
+      <div>
+        <label for="msg-topic">What is it about?</label>
+        <select id="msg-topic" required></select>
+      </div>
+      <div>
+        <label for="msg-text">Message</label>
+        <textarea id="msg-text" required minlength="10" maxlength="2000"></textarea>
+        <p class="msg-hint" id="msg-count">10–2000 characters</p>
+      </div>
+      <div>
+        <label for="msg-link">Link to a source or evidence (optional)</label>
+        <input id="msg-link" type="url" inputmode="url" maxlength="500" placeholder="https://…" autocomplete="off">
+      </div>
+      <div class="msg-trap" aria-hidden="true">
+        <label for="msg-website">Leave this empty</label>
+        <input id="msg-website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+      <p class="msg-privacy">Messages are anonymous: we don't ask for your name or email, so we can't reply. Please don't include personal details. To limit spam, the server keeps a one-way code made from your network address that changes every day; the address itself is never stored.</p>
+      <p class="msg-status" id="msg-status" role="status" aria-live="polite"></p>
+      <div class="msg-actions">
+        <button type="button" id="msg-cancel">Cancel</button>
+        <button type="submit" class="primary" id="msg-send">Send</button>
+      </div>
+    </form>
+  </dialog>
 </div>
 
 <script src="predictions.js"></script>
@@ -569,9 +643,14 @@
     if (tl) li.appendChild(tl);
 
     if (r.notes) li.appendChild(el("p", { "class": "notes" }, r.notes));
-    if (likes.ready && r.id) {
+    if (r.id && (likes.ready || LIKES_API)) {
       var foot = el("div", { "class": "card-foot" });
-      foot.appendChild(reactionBar(r.id));
+      if (likes.ready) foot.appendChild(reactionBar(r.id));
+      if (LIKES_API) {
+        var rep = el("button", { type: "button", "class": "report-btn" }, "Report a problem");
+        rep.addEventListener("click", function () { openMessage(r); });
+        foot.appendChild(rep);
+      }
       li.appendChild(foot);
     }
     return li;
@@ -821,6 +900,119 @@
     }).catch(function (err) {
       console.warn("Reactions unavailable; hiding reaction buttons.", err);
     });
+  }
+
+  // ---------- messages: "Report a problem" on a card, and Contact ----------
+  var CARD_TOPICS = [
+    { key: "wrong_quote", label: "The quote or source is wrong" },
+    { key: "outcome",     label: "I have evidence of the outcome" },
+    { key: "dates",       label: "A date or deadline is wrong" },
+    { key: "other",       label: "Something else" }
+  ];
+  var CONTACT_TOPICS = [
+    { key: "suggest", label: "Suggest a prediction" },
+    { key: "site",    label: "A problem with the site" },
+    { key: "other",   label: "Something else" }
+  ];
+  var msgDialog = document.getElementById("msg-dialog");
+  var msgForm = document.getElementById("msg-form");
+  var msgTopic = document.getElementById("msg-topic");
+  var msgText = document.getElementById("msg-text");
+  var msgLink = document.getElementById("msg-link");
+  var msgTrap = document.getElementById("msg-website");
+  var msgStatus = document.getElementById("msg-status");
+  var msgSend = document.getElementById("msg-send");
+  var msgCount = document.getElementById("msg-count");
+  var msgFor = null; // record the open message is about, or null for Contact
+  var msgOpener = null;
+
+  function setMsgStatus(text, kind) {
+    msgStatus.textContent = text;
+    msgStatus.className = "msg-status" + (kind ? " is-" + kind : "");
+  }
+  function updateMsgCount() {
+    var n = msgText.value.trim().length;
+    msgCount.textContent = n ? n + " / 2000 characters" + (n < 10 ? " (at least 10)" : "") : "10–2000 characters";
+  }
+
+  function openMessage(r) {
+    msgFor = r || null;
+    msgOpener = document.activeElement;
+    document.getElementById("msg-title").textContent = r ? "Report a problem" : "Send us a message";
+    var about = document.getElementById("msg-about");
+    if (r) {
+      var c = r.claim || "";
+      about.textContent = "About: " + (r.speaker || "Unknown speaker") + ", " + fmtDate(r.said_on) + " — “" + (c.length > 140 ? c.slice(0, 140) + "…" : c) + "”";
+      about.hidden = false;
+    } else {
+      about.textContent = ""; about.hidden = true;
+    }
+    msgTopic.textContent = "";
+    (r ? CARD_TOPICS : CONTACT_TOPICS).forEach(function (t) { msgTopic.appendChild(el("option", { value: t.key }, t.label)); });
+    msgText.value = ""; msgLink.value = ""; msgTrap.value = "";
+    msgText.placeholder = r ? "What is wrong, and how do you know?" : "Your message. For a new prediction, include the exact quote and where it was said.";
+    updateMsgCount();
+    setMsgStatus("");
+    msgSend.disabled = false; msgSend.hidden = false;
+    document.getElementById("msg-cancel").textContent = "Cancel";
+    if (typeof msgDialog.showModal === "function") msgDialog.showModal(); else msgDialog.setAttribute("open", "");
+    msgTopic.focus();
+  }
+  function closeMessage() {
+    if (typeof msgDialog.close === "function") msgDialog.close(); else msgDialog.removeAttribute("open");
+  }
+  msgDialog.addEventListener("close", function () {
+    if (msgOpener && typeof msgOpener.focus === "function") msgOpener.focus();
+  });
+  // Click on the dimmed area closes the dialog.
+  msgDialog.addEventListener("click", function (e) { if (e.target === msgDialog) closeMessage(); });
+  document.getElementById("msg-cancel").addEventListener("click", closeMessage);
+  msgText.addEventListener("input", updateMsgCount);
+
+  msgForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (msgSend.disabled) return;
+    var text = msgText.value.trim(), lnk = msgLink.value.trim();
+    if (text.length < 10) { setMsgStatus("Please write at least 10 characters.", "error"); msgText.focus(); return; }
+    if (text.length > 2000) { setMsgStatus("Please keep it under 2000 characters.", "error"); msgText.focus(); return; }
+    if (lnk && !/^https?:\/\/\S+$/i.test(lnk)) { setMsgStatus("The link should start with http:// or https://", "error"); msgLink.focus(); return; }
+
+    msgSend.disabled = true;
+    setMsgStatus("Sending…");
+    getTurnstileToken().then(function (token) {
+      var body = { topic: msgTopic.value, text: text, link: lnk, website: msgTrap.value };
+      if (msgFor && msgFor.id) body.id = msgFor.id;
+      if (token) body.turnstile = token;
+      return fetch(LIKES_API + "/message", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
+      });
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (!res.ok) throw { status: res.status, data: data };
+        setMsgStatus("Thanks, your message was sent. If the sources back it up, the record will be corrected.", "ok");
+        msgSend.hidden = true;
+        document.getElementById("msg-cancel").textContent = "Close";
+      });
+    }).catch(function (err) {
+      var code = err && err.data && err.data.error;
+      var st = err && err.status;
+      setMsgStatus(
+        code === "daily_limit" ? "You've sent the most messages allowed for today. Please try again tomorrow."
+        : st === 429 ? "Too many messages in a minute. Please wait a moment and try again."
+        : code === "bad_link" ? "That link doesn't look right. It should start with http:// or https://"
+        : st === 503 ? "Messages are paused right now. Please try again later."
+        : "Couldn't send your message. Please try again later.", "error");
+      msgSend.disabled = false;
+      console.warn("Message failed", err);
+    });
+  });
+
+  if (LIKES_API) {
+    var contactBtn = document.getElementById("contact-btn");
+    contactBtn.hidden = false;
+    contactBtn.addEventListener("click", function () { openMessage(null); });
+    document.getElementById("contact-note").hidden = false;
+    document.getElementById("contact-link").addEventListener("click", function () { openMessage(null); });
   }
 
   // ---------- theme (dark by default) ----------

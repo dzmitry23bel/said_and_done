@@ -9,6 +9,8 @@ ALLOWED_ORIGINS = "https://dzmitry23bel.github.io"
 PREDICTIONS_URL = "https://dzmitry23bel.github.io/said_and_done/predictions.js"
 # "true" stops all new likes and unlikes (counts stay visible).
 LIKES_FROZEN = "false"
+# "true" stops new visitor messages.
+MESSAGES_FROZEN = "false"
 
 [[d1_databases]]
 binding = "DB"
@@ -20,6 +22,12 @@ database_id = "9f3acf4f-1ab3-4231-8292-163533a7db0b"
 name = "LIKE_LIMITER"
 namespace_id = "1001"
 simple = { limit = 20, period = 60 }
+
+# At most 3 messages per IP per minute (on top of the daily caps in src/index.js).
+[[ratelimits]]
+name = "MSG_LIMITER"
+namespace_id = "1002"
+simple = { limit = 3, period = 60 }
 
 # Secrets (not in this file), set with `npx wrangler secret put <NAME>`:
 #   LIKE_SECRET       required: random string used to make the one-way voter codes
