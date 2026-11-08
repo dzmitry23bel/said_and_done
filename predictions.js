@@ -503,5 +503,20 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-08",
     notes: "\"Visibility\" refers to business already on the books, not revenue. He says the figure excludes China. Can be checked against Nvidia's results for the quarter ending in early 2027."
+  },
+
+  // Source: "Jensen Huang: NVIDIA - The $4 Trillion Company & the AI Revolution | Lex Fridman Podcast #494", YouTube, 2026-03-23.
+  {
+    id: "jh-2026-biological-machine-5y",
+    speaker: "Jensen Huang",
+    claim: "Understanding the biological machine is right around the corner. It's not 10 years. It's five years probably.",
+    said_on: "2026-03-23",
+    source_url: "https://www.youtube.com/watch?v=vif8NQcjVf0",
+    source_time: "2:24:12",
+    deadline: "2031-03-23",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Deadline is five years after publication. \"Understanding the biological machine\" has no clear test, so the outcome will be hard to judge."
   }
 ];
