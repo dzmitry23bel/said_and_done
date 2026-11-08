@@ -58,7 +58,7 @@ const PREDICTIONS = [
     status: "pending",
     evidence_url: "",
     checked_on: "2026-11-08",
-    notes: "About an attempt to catch the Starship upper stage (Ship 42) with the launch tower arms. Deadline: \"about a week\" counted from the video's publication date; the recording date may be earlier."
+    notes: "About an attempt to catch the Starship upper stage (Ship 42) with the launch tower arms; the auto-generated transcript reads \"catch up with the tower\". Deadline: \"about a week\" counted from the video's publication date; the recording date may be earlier."
   },
   {
     id: "em-2026-spacex-arr-100b-december",
