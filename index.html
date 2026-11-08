@@ -363,6 +363,26 @@
     });
   }
 
+  // ---------- source link with timestamp ----------
+  // "1:12" / "1:24:29" -> seconds; returns NaN for anything else.
+  function toSeconds(t) {
+    if (!/^\d{1,2}(:\d{1,2}){1,2}$/.test(t)) return NaN;
+    return t.split(":").reduce(function (acc, part) { return acc * 60 + parseInt(part, 10); }, 0);
+  }
+  // YouTube links get ?t=<seconds>s so the video opens at the quote; other sites are left as is ("").
+  function timedUrl(url, time) {
+    var sec = toSeconds(time);
+    if (!(sec >= 0)) return "";
+    try {
+      var u = new URL(url);
+      var host = u.hostname.replace(/^www\.|^m\./, "");
+      var isYT = (host === "youtube.com" && (u.pathname === "/watch" || /^\/(live|shorts)\//.test(u.pathname))) || host === "youtu.be";
+      if (!isYT) return "";
+      u.searchParams.set("t", sec + "s");
+      return u.toString();
+    } catch (e) { return ""; }
+  }
+
   // ---------- time progress (said_on -> deadline) ----------
   function dayNum(iso) { var p = iso.split("-"); return Date.UTC(+p[0], +p[1] - 1, +p[2]) / 86400000; }
   function span(days) {
@@ -427,8 +447,13 @@
 
     if (r.source_url) {
       var src = el("span");
-      src.appendChild(link(r.source_url, "Source"));
-      if (r.source_time) src.appendChild(document.createTextNode(" at " + r.source_time));
+      var timed = r.source_time ? timedUrl(r.source_url, r.source_time) : "";
+      if (timed) {
+        src.appendChild(link(timed, "Source at " + r.source_time));
+      } else {
+        src.appendChild(link(r.source_url, "Source"));
+        if (r.source_time) src.appendChild(document.createTextNode(" at " + r.source_time));
+      }
       row("Source", src);
     } else {
       row("Source", el("span", { "class": "warn" }, "No source link"));
