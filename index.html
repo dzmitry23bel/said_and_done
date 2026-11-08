@@ -141,20 +141,20 @@
   .meta dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
   .notes { margin: 12px 0 0; font-size: 0.92rem; color: var(--muted); overflow-wrap: anywhere; }
   .warn { color: var(--warn-fg); font-size: 0.85rem; }
-  .card-foot { display: flex; justify-content: flex-end; margin-top: 12px; }
-  .like {
-    font: inherit; font-size: 0.88rem; cursor: pointer;
-    display: inline-flex; align-items: center; gap: 6px;
+  .card-foot { display: flex; justify-content: flex-start; margin-top: 12px; }
+  .reactions { display: flex; flex-wrap: wrap; gap: 6px; }
+  .react {
+    font: inherit; font-size: 0.85rem; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px;
     color: var(--muted); background: transparent;
     border: 1px solid var(--border); border-radius: 999px;
-    padding: 4px 12px;
+    padding: 3px 10px; line-height: 1.4;
   }
-  .like:hover { color: var(--text); }
-  .like svg { flex: none; }
-  .like[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
-  .like[aria-pressed="true"] svg path { fill: currentColor; }
-  .like b { font-weight: 600; font-variant-numeric: tabular-nums; }
-  .like:disabled { cursor: progress; opacity: 0.7; }
+  .react:hover { color: var(--text); border-color: var(--muted); }
+  .react .emo { font-size: 1rem; line-height: 1; }
+  .react[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .react b { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .react:disabled { cursor: progress; opacity: 0.7; }
 
   .empty {
     text-align: center; color: var(--muted);
@@ -226,7 +226,7 @@
 
   <footer>
     <p>Independent project. Not affiliated with, endorsed by, or produced by any person named here. Quotes are taken from the linked sources; status reflects the evidence shown and the date it was checked.</p>
-    <p id="likes-note" hidden>Likes are anonymous: no accounts, no cookies, no analytics. To count one like per network, the server keeps a one-way code made from your IP address and the prediction; the address itself is never stored.</p>
+    <p id="likes-note" hidden>Reactions are anonymous: no accounts, no cookies, no analytics. To count each reaction once per network, the server keeps a one-way code made from your IP address and the prediction; the address itself is never stored. Reactions show what visitors think; they do not change a prediction&#39;s status.</p>
   </footer>
   <div id="ts-box" hidden></div>
 </div>
@@ -402,7 +402,7 @@
     if (r.notes) li.appendChild(el("p", { "class": "notes" }, r.notes));
     if (likes.ready && r.id) {
       var foot = el("div", { "class": "card-foot" });
-      foot.appendChild(likeButton(r.id));
+      foot.appendChild(reactionBar(r.id));
       li.appendChild(foot);
     }
     return li;
@@ -424,11 +424,11 @@
     var sp = fSpeaker.value, st = fStatus.value;
     var bySpeaker = records.filter(function (r) { return !sp || r.speaker === sp; });
     var shown = bySpeaker.filter(function (r) { return !st || r.status === st; });
-    // Hottest = most likes first. records are already newest-first and sort is stable,
-    // so ties stay newest-first. Without likes the order is simply newest-first.
-    // Cards are not re-sorted when someone clicks like, so nothing jumps under the cursor.
+    // Hottest = most reactions in total first. records are already newest-first and sort is stable,
+    // so ties stay newest-first. Without reactions the order is simply newest-first.
+    // Cards are not re-sorted when someone reacts, so nothing jumps under the cursor.
     if (likes.ready && fSort.value === "hot") {
-      shown = shown.slice().sort(function (a, b) { return (likes.counts[b.id] || 0) - (likes.counts[a.id] || 0); });
+      shown = shown.slice().sort(function (a, b) { return totalReactions(b.id) - totalReactions(a.id); });
     }
 
     renderCounts(bySpeaker);
@@ -458,64 +458,89 @@
   fSort.addEventListener("change", render);
   render();
 
-  // ---------- likes ----------
-  function likeButton(id) {
-    var on = !!likes.mine[id];
-    var b = el("button", { type: "button", "class": "like", "aria-pressed": on ? "true" : "false", "data-id": id });
-    b.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.2-9.4C1.6 7.6 3.9 4.5 7.2 4.5c2 0 3.5 1.1 4.8 2.8 1.3-1.7 2.8-2.8 4.8-2.8 3.3 0 5.6 3.1 4.4 6.6-1.7 4.8-9.2 9.4-9.2 9.4Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
-    b.appendChild(el("span", { "class": "sr-only" }, on ? "Unlike" : "Like"));
-    b.appendChild(el("b", null, String(likes.counts[id] || 0)));
-    b.title = on ? "Remove your like" : "Like";
-    b.addEventListener("click", function () { toggleLike(id, b); });
-    return b;
+  // ---------- reactions ----------
+  // likes.counts[id] = { like: n, funny: n, ... }; likes.mine[id] = { like: 1, ... } (this browser's own reactions)
+  var REACTIONS = [
+    { kind: "like",       emoji: "👍", label: "Like" },
+    { kind: "funny",      emoji: "😂", label: "Funny" },
+    { kind: "delusional", emoji: "🤡", label: "Delusional" },
+    { kind: "trash",      emoji: "💩", label: "Trash" },
+    { kind: "hate",       emoji: "😡", label: "Hate" }
+  ];
+
+  function countOf(id, kind) { return (likes.counts[id] && likes.counts[id][kind]) || 0; }
+  function isMine(id, kind) { return !!(likes.mine[id] && likes.mine[id][kind]); }
+  function totalReactions(id) {
+    var c = likes.counts[id] || {}, t = 0;
+    for (var k in c) t += c[k] || 0;
+    return t;
+  }
+  function setMine(id, kind, on) {
+    if (on) (likes.mine[id] = likes.mine[id] || {})[kind] = 1;
+    else if (likes.mine[id]) { delete likes.mine[id][kind]; if (!Object.keys(likes.mine[id]).length) delete likes.mine[id]; }
+  }
+  function setCount(id, kind, n) { (likes.counts[id] = likes.counts[id] || {})[kind] = Math.max(0, n); }
+
+  function reactionBar(id) {
+    var bar = el("div", { "class": "reactions", role: "group", "aria-label": "Reactions" });
+    REACTIONS.forEach(function (r) {
+      var b = el("button", { type: "button", "class": "react", "data-id": id, "data-kind": r.kind });
+      b.appendChild(el("span", { "class": "emo", "aria-hidden": "true" }, r.emoji));
+      b.appendChild(el("span", { "class": "sr-only" }, r.label));
+      b.appendChild(el("b", null, "0"));
+      b.addEventListener("click", function () { toggleReaction(id, r, b); });
+      paintReaction(b, id, r);
+      bar.appendChild(b);
+    });
+    return bar;
   }
 
-  function paintLike(b, id) {
-    var on = !!likes.mine[id];
+  function paintReaction(b, id, r) {
+    var on = isMine(id, r.kind);
     b.setAttribute("aria-pressed", on ? "true" : "false");
-    b.querySelector(".sr-only").textContent = on ? "Unlike" : "Like";
-    b.querySelector("b").textContent = String(likes.counts[id] || 0);
-    b.title = on ? "Remove your like" : "Like";
+    b.querySelector("b").textContent = String(countOf(id, r.kind));
+    b.title = on ? "Remove your “" + r.label + "”" : r.label;
   }
 
   function saveMine() {
-    try { localStorage.setItem("liked", JSON.stringify(likes.mine)); } catch (e) {}
+    try { localStorage.setItem("reactions", JSON.stringify(likes.mine)); } catch (e) {}
   }
 
-  function toggleLike(id, b) {
+  function toggleReaction(id, r, b) {
     if (b.disabled) return;
-    var wasOn = !!likes.mine[id], prevCount = likes.counts[id] || 0;
+    var wasOn = isMine(id, r.kind), prevCount = countOf(id, r.kind);
     // optimistic update
-    if (wasOn) delete likes.mine[id]; else likes.mine[id] = 1;
-    likes.counts[id] = Math.max(0, prevCount + (wasOn ? -1 : 1));
-    paintLike(b, id);
+    setMine(id, r.kind, !wasOn);
+    setCount(id, r.kind, prevCount + (wasOn ? -1 : 1));
+    paintReaction(b, id, r);
     b.disabled = true;
+    var errTitle = "";
 
     getTurnstileToken().then(function (token) {
-      var body = { id: id, action: wasOn ? "unlike" : "like" };
+      var body = { id: id, kind: r.kind, action: wasOn ? "remove" : "add" };
       if (token) body.turnstile = token;
-      return fetch(LIKES_API + "/like", {
+      return fetch(LIKES_API + "/react", {
         method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
       });
     }).then(function (res) {
       return res.json().catch(function () { return {}; }).then(function (data) {
         if (!res.ok) throw { status: res.status, data: data };
-        likes.counts[id] = data.count;
-        if (data.liked) likes.mine[id] = 1; else delete likes.mine[id];
+        setCount(id, r.kind, data.count);
+        setMine(id, r.kind, !!data.active);
         saveMine();
       });
     }).catch(function (err) {
-      if (wasOn) likes.mine[id] = 1; else delete likes.mine[id];
-      likes.counts[id] = prevCount;
-      var s = err && err.status;
-      b.title = s === 429 ? "Too many likes in a minute. Try again shortly."
-              : s === 503 ? "Likes are paused right now."
-              : "Couldn't save your like. Try again later.";
-      console.warn("Like failed", err);
+      setMine(id, r.kind, wasOn);
+      setCount(id, r.kind, prevCount);
+      var st = err && err.status;
+      errTitle = st === 429 ? "Too many reactions in a minute. Try again shortly."
+               : st === 503 ? "Reactions are paused right now."
+               : "Couldn't save your reaction. Try again later.";
+      console.warn("Reaction failed", err);
     }).then(function () {
       b.disabled = false;
-      var t = b.title; paintLike(b, id);
-      if (!/^(Like|Remove your like)$/.test(t)) b.title = t;
+      paintReaction(b, id, r);
+      if (errTitle) b.title = errTitle;
     });
   }
 
@@ -547,21 +572,29 @@
   }
 
   if (LIKES_API && records.length) {
-    try { likes.mine = JSON.parse(localStorage.getItem("liked") || "{}") || {}; } catch (e) { likes.mine = {}; }
-    fetch(LIKES_API + "/likes").then(function (res) {
+    try { likes.mine = JSON.parse(localStorage.getItem("reactions") || "{}") || {}; } catch (e) { likes.mine = {}; }
+    // Carry over likes saved by the previous version of the page.
+    try {
+      var oldLiked = JSON.parse(localStorage.getItem("liked") || "{}") || {};
+      Object.keys(oldLiked).forEach(function (id) { setMine(id, "like", true); });
+      localStorage.removeItem("liked");
+    } catch (e) {}
+    fetch(LIKES_API + "/reactions").then(function (res) {
       if (!res.ok) throw new Error("HTTP " + res.status);
       return res.json();
     }).then(function (data) {
       likes.counts = (data && data.counts) || {};
-      // A remembered like on a prediction the server counts as 0 (e.g. after a reset) is stale.
-      Object.keys(likes.mine).forEach(function (id) { if (!likes.counts[id]) delete likes.mine[id]; });
+      // A remembered reaction the server counts as 0 (e.g. after a reset) is stale.
+      Object.keys(likes.mine).forEach(function (id) {
+        Object.keys(likes.mine[id]).forEach(function (kind) { if (!countOf(id, kind)) setMine(id, kind, false); });
+      });
       saveMine();
       likes.ready = true;
       document.getElementById("likes-note").hidden = false;
       document.getElementById("sort-field").hidden = false;
       render();
     }).catch(function (err) {
-      console.warn("Likes unavailable; hiding like buttons.", err);
+      console.warn("Reactions unavailable; hiding reaction buttons.", err);
     });
   }
 

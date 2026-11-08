@@ -1,13 +1,18 @@
 /**
- * Said & Done likes API (Cloudflare Worker + D1).
+ * Said & Done reactions API (Cloudflare Worker + D1).
  *
- *   GET  /likes                     -> { counts: { "<id>": n, ... } }
- *   POST /like  { id, action, turnstile? }
- *        action: "like" | "unlike"  -> { id, count, liked }
+ *   GET  /reactions                 -> { counts: { "<id>": { like: n, funny: n, ... }, ... } }
+ *   POST /react { id, kind, action, turnstile? }
+ *        kind:   "like" | "funny" | "delusional" | "trash" | "hate"
+ *        action: "add" | "remove"   -> { id, kind, count, active }
+ *
+ * Kept for pages cached before the switch:
+ *   GET  /likes                     -> { counts: { "<id>": n } }      (the "like" reaction)
+ *   POST /like { id, action: "like" | "unlike" } -> { id, count, liked }
  *
  * Spam protection:
  *   - only ids that exist in the published predictions.js are accepted;
- *   - one like per network per prediction: we store HMAC(secret, ip|id),
+ *   - one reaction of each kind per network per prediction: we store HMAC(secret, ip|id),
  *     never the IP itself;
  *   - rate limit per IP (LIKE_LIMITER binding);
  *   - only ALLOWED_ORIGINS may call the API from a browser;
@@ -15,6 +20,7 @@
  *   - optional Cloudflare Turnstile check when TURNSTILE_SECRET is set.
  */
 
+const KINDS = ["like", "funny", "delusional", "trash", "hate"];
 const ID_RE = /^[A-Za-z0-9_-]{1,64}$/;
 const IDS_TTL_MS = 5 * 60 * 1000;
 let idsCache = { at: 0, ids: null };
@@ -32,15 +38,26 @@ export default {
     if (origin && !allowed.includes(origin)) return json({ error: "origin_not_allowed" }, 403, cors);
 
     try {
+      if (request.method === "GET" && url.pathname === "/reactions") {
+        const { results } = await env.DB.prepare("SELECT pred_id, kind, n FROM reaction_counts WHERE n > 0").all();
+        const counts = {};
+        for (const r of results) (counts[r.pred_id] = counts[r.pred_id] || {})[r.kind] = r.n;
+        return json({ counts }, 200, { ...cors, "Cache-Control": "no-store" });
+      }
+
+      if (request.method === "POST" && url.pathname === "/react") {
+        return await handleReact(request, env, cors, false);
+      }
+
+      // Legacy endpoints for the old like button.
       if (request.method === "GET" && url.pathname === "/likes") {
-        const { results } = await env.DB.prepare("SELECT pred_id, n FROM counts WHERE n > 0").all();
+        const { results } = await env.DB.prepare("SELECT pred_id, n FROM reaction_counts WHERE kind = 'like' AND n > 0").all();
         const counts = {};
         for (const r of results) counts[r.pred_id] = r.n;
         return json({ counts }, 200, { ...cors, "Cache-Control": "no-store" });
       }
-
       if (request.method === "POST" && url.pathname === "/like") {
-        return await handleLike(request, env, cors);
+        return await handleReact(request, env, cors, true);
       }
 
       return json({ error: "not_found" }, 404, cors);
@@ -51,7 +68,7 @@ export default {
   },
 };
 
-async function handleLike(request, env, cors) {
+async function handleReact(request, env, cors, legacy) {
   if (env.LIKES_FROZEN === "true") return json({ error: "frozen" }, 503, cors);
 
   const ip = request.headers.get("CF-Connecting-IP") || "";
@@ -65,8 +82,15 @@ async function handleLike(request, env, cors) {
   let body;
   try { body = await request.json(); } catch { return json({ error: "bad_json" }, 400, cors); }
   const id = typeof body.id === "string" ? body.id : "";
-  const action = body.action === "unlike" ? "unlike" : body.action === "like" ? "like" : "";
-  if (!ID_RE.test(id) || !action) return json({ error: "bad_request" }, 400, cors);
+  let kind, add;
+  if (legacy) {
+    kind = "like";
+    add = body.action === "like" ? true : body.action === "unlike" ? false : null;
+  } else {
+    kind = KINDS.includes(body.kind) ? body.kind : "";
+    add = body.action === "add" ? true : body.action === "remove" ? false : null;
+  }
+  if (!ID_RE.test(id) || !kind || add === null) return json({ error: "bad_request" }, 400, cors);
 
   if (env.TURNSTILE_SECRET) {
     const ok = await verifyTurnstile(env.TURNSTILE_SECRET, body.turnstile, ip);
@@ -80,18 +104,20 @@ async function handleLike(request, env, cors) {
   if (!env.LIKE_SECRET) return json({ error: "not_configured" }, 500, cors);
   const voter = await hmac(env.LIKE_SECRET, ip + "|" + id);
 
-  const write = action === "like"
-    ? env.DB.prepare("INSERT OR IGNORE INTO likes (pred_id, voter, created_at) VALUES (?1, ?2, ?3)").bind(id, voter, Date.now())
-    : env.DB.prepare("DELETE FROM likes WHERE pred_id = ?1 AND voter = ?2").bind(id, voter);
+  const write = add
+    ? env.DB.prepare("INSERT OR IGNORE INTO reactions (pred_id, kind, voter, created_at) VALUES (?1, ?2, ?3, ?4)").bind(id, kind, voter, Date.now())
+    : env.DB.prepare("DELETE FROM reactions WHERE pred_id = ?1 AND kind = ?2 AND voter = ?3").bind(id, kind, voter);
   const recount = env.DB.prepare(
-    "INSERT INTO counts (pred_id, n) VALUES (?1, (SELECT COUNT(*) FROM likes WHERE pred_id = ?1)) " +
-    "ON CONFLICT(pred_id) DO UPDATE SET n = excluded.n"
-  ).bind(id);
-  const read = env.DB.prepare("SELECT n FROM counts WHERE pred_id = ?1").bind(id);
+    "INSERT INTO reaction_counts (pred_id, kind, n) VALUES (?1, ?2, (SELECT COUNT(*) FROM reactions WHERE pred_id = ?1 AND kind = ?2)) " +
+    "ON CONFLICT(pred_id, kind) DO UPDATE SET n = excluded.n"
+  ).bind(id, kind);
+  const read = env.DB.prepare("SELECT n FROM reaction_counts WHERE pred_id = ?1 AND kind = ?2").bind(id, kind);
 
   const res = await env.DB.batch([write, recount, read]); // one transaction
   const count = res[2].results[0] ? res[2].results[0].n : 0;
-  return json({ id, count, liked: action === "like" }, 200, cors);
+  return legacy
+    ? json({ id, count, liked: add }, 200, cors)
+    : json({ id, kind, count, active: add }, 200, cors);
 }
 
 // Ids from the published predictions.js, cached for a few minutes per isolate.

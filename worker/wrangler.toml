@@ -15,11 +15,11 @@ binding = "DB"
 database_name = "said-and-done-likes"
 database_id = "9f3acf4f-1ab3-4231-8292-163533a7db0b"
 
-# At most 10 like/unlike requests per IP per minute.
+# At most 20 reaction requests per IP per minute.
 [[ratelimits]]
 name = "LIKE_LIMITER"
 namespace_id = "1001"
-simple = { limit = 10, period = 60 }
+simple = { limit = 20, period = 60 }
 
 # Secrets (not in this file), set with `npx wrangler secret put <NAME>`:
 #   LIKE_SECRET       required: random string used to make the one-way voter codes

@@ -86,19 +86,21 @@ Lime is for marks, links and highlights on dark backgrounds only. It isn't reada
 
 Status colours are separate from the brand and keep their meaning everywhere: pending (grey-blue), happened (mint), partial (amber), did not happen (red), too early (violet). "Happened" is mint rather than green so it doesn't merge with the lime accent.
 
-## Likes
+## Reactions
 
-Visitors can like a prediction. Counts are shared and stored by a small Cloudflare Worker with a D1 database in `worker/`. The site itself stays static: if `LIKES_API` in `index.html` is empty, or the Worker is unreachable, the like buttons are hidden and everything else works.
+Visitors can react to a prediction with five reactions: 👍 Like, 😂 Funny, 🤡 Delusional, 💩 Trash, 😡 Hate. Each one is a separate toggle; a visitor can use several on the same card. Counts are shared and stored by a small Cloudflare Worker with a D1 database in `worker/`. The site itself stays static: if `LIKES_API` in `index.html` is empty, or the Worker is unreachable, the reaction buttons are hidden and everything else works. The **Hottest** sort orders cards by total reactions. Reactions never change a prediction's status.
 
-**What is stored:** a count per prediction, plus one row per (prediction, network) holding `HMAC(secret, ip|id)`. That one-way code can't be turned back into an IP. No cookies, accounts or analytics. The visitor's own likes are remembered in their browser (`localStorage`).
+**What is stored:** a count per prediction and reaction, plus one row per (prediction, reaction, network) holding `HMAC(secret, ip|id)`. That one-way code can't be turned back into an IP. No cookies, accounts or analytics. The visitor's own reactions are remembered in their browser (`localStorage`).
 
 **Spam protection:**
 
-- only ids found in the published `predictions.js` can be liked;
-- one like per network per prediction;
-- 10 like/unlike requests per IP per minute;
+- only ids found in the published `predictions.js` can be reacted to;
+- each reaction counts once per network per prediction;
+- 20 reaction requests per IP per minute;
 - browsers on other sites are refused (`ALLOWED_ORIGINS`);
-- on the free plan the worst case is the daily quota running out: likes pause until midnight UTC, no bill.
+- on the free plan the worst case is the daily quota running out: reactions pause until midnight UTC, no bill.
+
+**API:** `GET /reactions` returns all counts; `POST /react` with `{id, kind, action: "add" | "remove"}`. The old `GET /likes` and `POST /like` still work and map to the 👍 reaction. Reactions replaced the single like in `migrations/0002_reactions.sql`, which copied existing likes over and left the old `likes` and `counts` tables as a backup.
 
 ### First-time setup
 
@@ -126,14 +128,14 @@ GitHub Pages must be on: the Worker reads ids from `PREDICTIONS_URL`.
 ### Admin
 
 ```bash
-# pause all likes: set LIKES_FROZEN = "true" in wrangler.toml, then
+# pause all reactions: set LIKES_FROZEN = "true" in wrangler.toml, then
 npx wrangler deploy
 
-# reset one prediction
-npx wrangler d1 execute said-and-done-likes --remote --command "DELETE FROM likes WHERE pred_id='ID'; DELETE FROM counts WHERE pred_id='ID';"
+# reset all reactions on one prediction
+npx wrangler d1 execute said-and-done-likes --remote --command "DELETE FROM reactions WHERE pred_id='ID'; DELETE FROM reaction_counts WHERE pred_id='ID';"
 
 # see counts
-npx wrangler d1 execute said-and-done-likes --remote --command "SELECT * FROM counts ORDER BY n DESC;"
+npx wrangler d1 execute said-and-done-likes --remote --command "SELECT * FROM reaction_counts ORDER BY n DESC;"
 ```
 
 ### If spam gets through: Turnstile (off by default)
