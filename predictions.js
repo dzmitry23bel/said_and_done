@@ -587,5 +587,20 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-08",
     notes: "Deadline is the worst case, ten years after publication. The best case, five years, ends on 2026-12-28."
+  },
+
+  // Source: "Joe Rogan Experience #2255 - Mark Zuckerberg", YouTube, 2025-01-10.
+  {
+    id: "mz-2025-ai-midlevel-engineer-2025",
+    speaker: "Mark Zuckerberg",
+    claim: "I think this year probably in 2025 we at Meta as well as the other companies that are basically working on this are going to have an AI that can effectively be a sort of mid-level engineer that you have at your company that can write code.",
+    said_on: "2025-01-10",
+    source_url: "https://www.youtube.com/watch?v=7k1ehaE0bdU",
+    source_time: "2:08:11",
+    deadline: "2025-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "No reliable public evidence of the outcome was found as of the check date. \"Mid-level engineer\" has no agreed test. He adds that it would be expensive to run at first."
   }
 ];
