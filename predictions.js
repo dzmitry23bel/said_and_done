@@ -36,4 +36,110 @@
  *     notes: "Timestamp unknown."
  *   }
  */
-const PREDICTIONS = [];
+const PREDICTIONS = [
+  // Source: "The full-length interview with Elon Musk | The Economist", YouTube, published 2026-07-29.
+  {
+    id: "em-2026-ai-exceeds-humans-5y",
+    speaker: "Elon Musk",
+    claim: "I think AI may exceed the sum of human intelligence in… around five years… Roughly 5 years is my guess.",
+    said_on: "2026-07-29",
+    source_url: "https://www.youtube.com/watch?v=XuoqKYxDHVc",
+    source_time: "1:12",
+    deadline: "2031-07-29",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Deadline is five years after the video's publication date; the recording date may be earlier. There is no agreed measure of \"the sum of human intelligence\"."
+  },
+  {
+    id: "em-2026-ai-far-greater-10y",
+    speaker: "Elon Musk",
+    claim: "In 10 years I would expect artificial intelligence to be far greater than the sum of human intelligence, like far greater.",
+    said_on: "2026-07-29",
+    source_url: "https://www.youtube.com/watch?v=XuoqKYxDHVc",
+    source_time: "0:53",
+    deadline: "2036-07-29",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Answer to a question about the world in 2036. Deadline is ten years after the video's publication date."
+  },
+  {
+    id: "em-2026-abundance-2036",
+    speaker: "Elon Musk",
+    claim: "The most likely outcome is an age of amazing abundance… where anyone can have anything they can think of… Let's see where we stand in 2036.",
+    said_on: "2026-07-29",
+    source_url: "https://www.youtube.com/watch?v=XuoqKYxDHVc",
+    source_time: "1:35",
+    deadline: "2036-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "He names 2036 himself; deadline set to the end of that year. He adds that a major war could derail this."
+  },
+  {
+    id: "em-2026-money-wont-matter-2036",
+    speaker: "Elon Musk",
+    claim: "I'll make another prediction. Money won't matter in 2036.",
+    said_on: "2026-07-29",
+    source_url: "https://www.youtube.com/watch?v=XuoqKYxDHVc",
+    source_time: "4:38",
+    deadline: "2036-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "He names 2036 himself; deadline set to the end of that year."
+  },
+  {
+    id: "em-2026-humans-not-in-control-10y",
+    speaker: "Elon Musk",
+    claim: "Asked \"You're sure that humans will no longer be in control in 10 years time?\", he answered: \"I think it is unlikely.\"",
+    said_on: "2026-07-29",
+    source_url: "https://www.youtube.com/watch?v=XuoqKYxDHVc",
+    source_time: "6:28",
+    deadline: "2036-07-29",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "His answer refers to humans staying in control of AI. Deadline is ten years after the video's publication date."
+  },
+  {
+    id: "em-2026-ai-robots-dominate-10y",
+    speaker: "Elon Musk",
+    claim: "AI and robots will really dominate everything… on a time scale that is less than 10 years.",
+    said_on: "2026-07-29",
+    source_url: "https://www.youtube.com/watch?v=XuoqKYxDHVc",
+    source_time: "1:24:04",
+    deadline: "2036-07-29",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Deadline is ten years after the video's publication date."
+  },
+  {
+    id: "em-2026-ai-robot-singularity-10y",
+    speaker: "Elon Musk",
+    claim: "The AI robot singularity is 10 years away.",
+    said_on: "2026-07-29",
+    source_url: "https://www.youtube.com/watch?v=XuoqKYxDHVc",
+    source_time: "1:24:29",
+    deadline: "2036-07-29",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Deadline is ten years after the video's publication date. \"Singularity\" is not defined in the interview."
+  },
+  {
+    id: "em-2026-uk-civil-war-20y",
+    speaker: "Elon Musk",
+    claim: "I would say civil war in Britain is probably 20 years away.",
+    said_on: "2026-07-29",
+    source_url: "https://www.youtube.com/watch?v=XuoqKYxDHVc",
+    source_time: "1:24:29",
+    deadline: "2046-07-29",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Earlier (1:04:06) he says it is inevitable \"if current trends continue\". Deadline is twenty years after the video's publication date; the number comes from auto-captions."
+  }
+];
