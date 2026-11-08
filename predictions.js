@@ -302,5 +302,111 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-08",
     notes: "The year 2050 comes from the interviewer's question."
+  },
+
+  // Source: "Elon Musk: The future we're building -- and boring | TED", YouTube, published 2017-05-03.
+  {
+    id: "em-2017-model3-production-july",
+    speaker: "Elon Musk",
+    claim: "Yeah, it's looking quite good for starting production in July.",
+    said_on: "2017-05-03",
+    source_url: "https://www.youtube.com/watch?v=zIwLWfaAg-8",
+    source_time: "13:34",
+    deadline: "2017-07-31",
+    status: "happened",
+    evidence_url: "https://en.wikipedia.org/wiki/Tesla_Model_3",
+    checked_on: "2026-11-08",
+    notes: "Limited Model 3 production began in July 2017."
+  },
+  {
+    id: "em-2017-la-ny-autonomous-2017",
+    speaker: "Elon Musk",
+    claim: "I think we're still on track for being able to go cross-country from LA to New York by the end of the year, fully autonomous… no controls touched at any point during the entire journey.",
+    said_on: "2017-05-03",
+    source_url: "https://www.youtube.com/watch?v=zIwLWfaAg-8",
+    source_time: "15:08",
+    deadline: "2017-12-31",
+    status: "not_happened",
+    evidence_url: "https://www.ttnews.com/articles/autonomous-coast-coast-tesla-trip-past-deadline-still-coming",
+    checked_on: "2026-11-08",
+    notes: "In February 2018 Tesla confirmed the drive had not happened; Musk said it would have needed too much specialized code. A later supervised FSD trip reported by fans does not count as fully autonomous."
+  },
+  {
+    id: "em-2017-sleep-in-car-two-years",
+    speaker: "Elon Musk",
+    claim: "Asked, leaving regulation aside, how far away it is to buy a Tesla, take your hands off the wheel, go to sleep and arrive safely: \"I think that's about two years.\"",
+    said_on: "2017-05-03",
+    source_url: "https://www.youtube.com/watch?v=zIwLWfaAg-8",
+    source_time: "16:55",
+    deadline: "2019-05-03",
+    status: "not_happened",
+    evidence_url: "https://hackaday.com/2020/10/23/tesla-begins-full-self-driving-public-beta-as-waymo-and-cruise-go-unattended",
+    checked_on: "2026-11-08",
+    notes: "In October 2020 Full Self-Driving was still a beta in which the driver had to pay attention and be ready to take over at all times. Deadline is two years after publication."
+  },
+  {
+    id: "em-2017-solar-roof-two-more-styles",
+    speaker: "Elon Musk",
+    claim: "We're starting off with two, two initially, and the second two will be introduced early next year.",
+    said_on: "2017-05-03",
+    source_url: "https://www.youtube.com/watch?v=zIwLWfaAg-8",
+    source_time: "24:43",
+    deadline: "2018-06-30",
+    status: "not_happened",
+    evidence_url: "https://www.teslarati.com/tesla-solar-roof-slate-tuscan-tiles-video/",
+    checked_on: "2026-11-08",
+    notes: "About the four solar roof tile styles. As of April 2021, Solar Roof installations used only Textured tiles. Deadline: \"early next year\" read as the first half of 2018."
+  },
+  {
+    id: "em-2017-gigafactory-locations-2017",
+    speaker: "Elon Musk",
+    claim: "I think we'll announce locations for somewhere between two and four Gigafactories later this year. Yeah, probably four.",
+    said_on: "2017-05-03",
+    source_url: "https://www.youtube.com/watch?v=zIwLWfaAg-8",
+    source_time: "28:25",
+    deadline: "2017-12-31",
+    status: "partial",
+    evidence_url: "https://en.wikipedia.org/wiki/Gigafactory_Shanghai",
+    checked_on: "2026-11-08",
+    notes: "It happened late: the first new location, Shanghai, was agreed in July 2018. No 2017 announcement was found."
+  },
+  {
+    id: "em-2017-mars-ship-boarding-8-10y",
+    speaker: "Elon Musk",
+    claim: "Asked when people will be walking into the Interplanetary Transport System rocket: \"I'm hopeful it's sort of an eight- to 10-year time frame. Aspirationally, that's our target.\"",
+    said_on: "2017-05-03",
+    source_url: "https://www.youtube.com/watch?v=zIwLWfaAg-8",
+    source_time: "34:06",
+    deadline: "2027-05-03",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Deadline is the upper end, ten years after publication."
+  },
+  {
+    id: "em-2017-solar-roofs-common-15y",
+    speaker: "Elon Musk",
+    claim: "If you say were to fast-forward to say 15 years from now, it will be unusual to have a roof that does not have solar.",
+    said_on: "2017-05-03",
+    source_url: "https://www.youtube.com/watch?v=zIwLWfaAg-8",
+    source_time: "25:23",
+    deadline: "2032-05-03",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Deadline is fifteen years after publication."
+  },
+  {
+    id: "em-2017-almost-all-houses-solar-50y",
+    speaker: "Elon Musk",
+    claim: "I think eventually almost all houses will have a solar roof… probably on the order of 40 or 50 years.",
+    said_on: "2017-05-03",
+    source_url: "https://www.youtube.com/watch?v=zIwLWfaAg-8",
+    source_time: "25:07",
+    deadline: "2067-05-03",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Deadline is the upper end, fifty years after publication."
   }
 ];
