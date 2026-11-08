@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Said &amp; Done</title>
+<meta name="description" content="A public record of statements about the future by technology leaders, each linked to its source and checked against public evidence.">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 28 28%27%3E%3Crect width=%2728%27 height=%2728%27 rx=%277%27 fill=%27%230E0F11%27/%3E%3Cg fill=%27none%27 stroke=%27%23C6F432%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M7.5 6.5h13a2.5 2.5 0 0 1 2.5 2.5v7.5a2.5 2.5 0 0 1-2.5 2.5h-6.5l-4 3.3V19H7.5A2.5 2.5 0 0 1 5 16.5V9a2.5 2.5 0 0 1 2.5-2.5Z%27 stroke-width=%271.8%27/%3E%3Cpath d=%27m10.3 12.8 2.5 2.5 5-5.2%27 stroke-width=%272%27 stroke-linecap=%27round%27/%3E%3C/g%3E%3C/svg%3E">
+<meta name="theme-color" content="#0E0F11">
+<style>
+  /* Said & Done palette "Ink and lime". Dark is the default; light only when <html data-theme="light">. */
+  :root {
+    --bg: #0E0F11;
+    --surface: #17191C;
+    --text: #F2F3F0;
+    --muted: #9A9EA3;
+    --border: #2A2D31;
+    --accent: #C6F432;   /* brand lime: logo, links, focus */
+    --focus: #C6F432;
+
+    --pending-bg: #23272e;   --pending-fg: #b9c2cf;
+    --happened-bg: #0f2e26;  --happened-fg: #6fe0b8;
+    --partial-bg: #362a10;   --partial-fg: #ebc46e;
+    --not-bg: #3a1a17;       --not-fg: #f3a197;
+    --early-bg: #2b2440;     --early-fg: #c5b5f0;
+    --warn-fg: #f3a197;
+
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg: #F6F7F2;
+    --surface: #FFFFFF;
+    --text: #111312;
+    --muted: #5A5E57;
+    --border: #E1E3DA;
+    --accent: #4A6B00;   /* lime is unreadable on white; deep olive from the same hue */
+    --focus: #4A6B00;
+
+    --pending-bg: #eef1f6;   --pending-fg: #3c4a63;
+    --happened-bg: #dff5ec;  --happened-fg: #0f6a4c;
+    --partial-bg: #fbf0d9;   --partial-fg: #7a5208;
+    --not-bg: #fbe4e2;       --not-fg: #a0261c;
+    --early-bg: #efeaf8;     --early-fg: #56408f;
+    --warn-fg: #a0261c;
+
+    color-scheme: light;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+  a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .site-header {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 56px; }
+  .brand {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--text); text-decoration: none;
+    font-weight: 700; font-size: 1.1rem; letter-spacing: -0.01em; white-space: nowrap;
+  }
+  .brand svg { flex: none; color: var(--accent); }
+  .brand .amp { color: var(--accent); font-weight: 600; }
+
+  .icon-btn {
+    flex: none; display: inline-grid; place-items: center;
+    width: 36px; height: 36px; padding: 0; cursor: pointer;
+    color: var(--text); background: transparent;
+    border: 1px solid var(--border); border-radius: 8px;
+  }
+  .icon-btn:hover { background: var(--surface); }
+  .i-moon { display: none; }
+  :root[data-theme="light"] .i-sun { display: none; }
+  :root[data-theme="light"] .i-moon { display: block; }
+
+  .hero { padding: 36px 0 4px; }
+  h1 { font-size: clamp(1.6rem, 6vw, 2.2rem); line-height: 1.15; margin: 0 0 10px; letter-spacing: -0.02em; }
+  .lede { margin: 0; color: var(--muted); max-width: 60ch; }
+  .stats { margin: 12px 0 0; font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .stats b { color: var(--text); }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0 16px; }
+  .field { display: flex; flex-direction: column; gap: 4px; flex: 1 1 180px; min-width: 0; }
+  .field label { font-size: 0.8rem; color: var(--muted); }
+  select {
+    font: inherit; width: 100%;
+    color: var(--text); background: var(--surface);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 10px;
+  }
+
+  .counts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; padding: 0; list-style: none; }
+  .count {
+    font: inherit; font-size: 0.85rem; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid transparent; border-radius: 999px;
+    padding: 4px 10px;
+  }
+  .count b { font-variant-numeric: tabular-nums; }
+  .count[aria-pressed="true"] { border-color: currentColor; }
+
+  .pill {
+    display: inline-block; font-size: 0.78rem; font-weight: 600;
+    border-radius: 999px; padding: 2px 9px; white-space: nowrap;
+  }
+  .s-pending      { background: var(--pending-bg);  color: var(--pending-fg); }
+  .s-happened     { background: var(--happened-bg); color: var(--happened-fg); }
+  .s-partial      { background: var(--partial-bg);  color: var(--partial-fg); }
+  .s-not_happened { background: var(--not-bg);      color: var(--not-fg); }
+  .s-too_early    { background: var(--early-bg);    color: var(--early-fg); }
+
+  .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px; min-width: 0;
+  }
+  .card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
+  .speaker { font-weight: 600; }
+  .claim {
+    margin: 12px 0; font-size: 1.05rem;
+    overflow-wrap: anywhere;
+  }
+  .meta {
+    display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px;
+    margin: 0; font-size: 0.88rem;
+  }
+  .meta dt { color: var(--muted); }
+  .meta dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  .notes { margin: 12px 0 0; font-size: 0.92rem; color: var(--muted); overflow-wrap: anywhere; }
+  .warn { color: var(--warn-fg); font-size: 0.85rem; }
+
+  .empty {
+    text-align: center; color: var(--muted);
+    border: 1px dashed var(--border); border-radius: 12px;
+    padding: 32px 16px; margin: 0;
+  }
+
+  footer { margin: 40px 0 32px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--muted); }
+  footer p { margin: 0 0 8px; }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="./" aria-label="Said &amp; Done, home">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <path d="M5 4h18a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-9l-5.5 4.5V20H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        <path d="m9 12 3.2 3.2L19 8.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Said <span class="amp">&amp;</span> Done</span>
+    </a>
+    <button type="button" class="icon-btn" id="theme-btn" aria-label="Switch to light theme" title="Switch to light theme">
+      <svg class="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+      </svg>
+      <svg class="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <h1>What was said. What happened.</h1>
+    <p class="lede">Public statements about the future by technology leaders. Each entry links to its source and is checked against public evidence.</p>
+    <p class="stats" id="stats" hidden></p>
+  </section>
+
+  <main>
+    <div class="controls">
+      <div class="field">
+        <label for="f-speaker">Speaker</label>
+        <select id="f-speaker"><option value="">All speakers</option></select>
+      </div>
+      <div class="field">
+        <label for="f-status">Status</label>
+        <select id="f-status"><option value="">All statuses</option></select>
+      </div>
+    </div>
+
+    <h2 class="sr-only">Counts by status</h2>
+    <ul class="counts" id="counts"></ul>
+
+    <h2 class="sr-only">Predictions</h2>
+    <p class="sr-only" id="result-count" aria-live="polite"></p>
+    <ul class="list" id="list"></ul>
+    <p class="empty" id="empty" hidden></p>
+  </main>
+
+  <footer>
+    <p>Independent project. Not affiliated with, endorsed by, or produced by any person named here. Quotes are taken from the linked sources; status reflects the evidence shown and the date it was checked.</p>
+  </footer>
+</div>
+
+<script src="predictions.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var STATUSES = [
+    { key: "pending",      label: "Pending" },
+    { key: "happened",     label: "Happened" },
+    { key: "partial",      label: "Partially happened" },
+    { key: "not_happened", label: "Did not happen" },
+    { key: "too_early",    label: "Too early to tell" }
+  ];
+  var STATUS_LABEL = {};
+  STATUSES.forEach(function (s) { STATUS_LABEL[s.key] = s.label; });
+  var NEEDS_EVIDENCE = { happened: true, partial: true, not_happened: true };
+  var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  var data = (typeof PREDICTIONS !== "undefined" && Array.isArray(PREDICTIONS)) ? PREDICTIONS : [];
+  if (typeof PREDICTIONS === "undefined") console.warn("predictions.js did not load; showing nothing.");
+  else if (!Array.isArray(PREDICTIONS)) console.warn("PREDICTIONS is not an array; showing nothing.");
+
+  // ---------- helpers ----------
+  function str(v) { return typeof v === "string" ? v.trim() : ""; }
+  function isDate(s) { return /^\d{4}-\d{2}-\d{2}$/.test(s); }
+  function fmtDate(s) {
+    if (!isDate(s)) return s;
+    var p = s.split("-");
+    var m = MONTHS[parseInt(p[1], 10) - 1];
+    return m ? m + " " + parseInt(p[2], 10) + ", " + p[0] : s;
+  }
+  function safeUrl(u) {
+    u = str(u);
+    return /^https?:\/\//i.test(u) ? u : "";
+  }
+  function el(tag, attrs, text) {
+    var n = document.createElement(tag);
+    if (attrs) for (var k in attrs) if (attrs[k] != null) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function link(url, text) {
+    var a = el("a", { href: url, target: "_blank", rel: "noopener noreferrer" }, text);
+    return a;
+  }
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  // ---------- normalise + validate ----------
+  var seen = {};
+  var records = data.map(function (r, i) {
+    r = r || {};
+    var rec = {
+      id: str(r.id), speaker: str(r.speaker), claim: str(r.claim),
+      said_on: str(r.said_on), source_url: safeUrl(r.source_url), source_time: str(r.source_time),
+      deadline: str(r.deadline), status: str(r.status), evidence_url: safeUrl(r.evidence_url),
+      checked_on: str(r.checked_on), notes: str(r.notes), problems: []
+    };
+    var tag = rec.id || ("#" + i);
+    if (!rec.id) rec.problems.push("missing id");
+    else if (seen[rec.id]) rec.problems.push("duplicate id");
+    seen[rec.id] = true;
+    if (!STATUS_LABEL[rec.status]) { rec.problems.push("unknown status \"" + rec.status + "\""); rec.status = "pending"; }
+    if (NEEDS_EVIDENCE[rec.status] && !rec.evidence_url) rec.problems.push("status needs an evidence link");
+    if (rec.said_on && !isDate(rec.said_on)) rec.problems.push("said_on is not YYYY-MM-DD");
+    if (rec.deadline && !isDate(rec.deadline)) rec.problems.push("deadline is not YYYY-MM-DD");
+    if (rec.checked_on && !isDate(rec.checked_on)) rec.problems.push("checked_on is not YYYY-MM-DD");
+    if (str(r.source_url) && !rec.source_url) rec.problems.push("source_url is not http(s)");
+    if (str(r.evidence_url) && !rec.evidence_url) rec.problems.push("evidence_url is not http(s)");
+    if (rec.problems.length) console.warn("Prediction " + tag + ": " + rec.problems.join("; "));
+    return rec;
+  });
+
+  records.sort(function (a, b) {
+    if (a.said_on === b.said_on) return 0;
+    return a.said_on < b.said_on ? 1 : -1; // newest first, empty dates last
+  });
+
+  // ---------- filters ----------
+  var fSpeaker = document.getElementById("f-speaker");
+  var fStatus = document.getElementById("f-status");
+  var countsEl = document.getElementById("counts");
+  var listEl = document.getElementById("list");
+  var emptyEl = document.getElementById("empty");
+  var resultEl = document.getElementById("result-count");
+
+  var speakers = [];
+  records.forEach(function (r) { if (r.speaker && speakers.indexOf(r.speaker) < 0) speakers.push(r.speaker); });
+  speakers.sort(function (a, b) { return a.localeCompare(b); });
+  speakers.forEach(function (s) { fSpeaker.appendChild(el("option", { value: s }, s)); });
+  STATUSES.forEach(function (s) { fStatus.appendChild(el("option", { value: s.key }, s.label)); });
+
+  // ---------- render ----------
+  function renderCounts(pool) {
+    countsEl.textContent = "";
+    STATUSES.forEach(function (s) {
+      var n = pool.filter(function (r) { return r.status === s.key; }).length;
+      var li = el("li");
+      var btn = el("button", {
+        type: "button", "class": "count s-" + s.key,
+        "aria-pressed": fStatus.value === s.key ? "true" : "false",
+        title: "Show only: " + s.label
+      });
+      btn.appendChild(el("span", null, s.label));
+      btn.appendChild(el("b", null, String(n)));
+      btn.addEventListener("click", function () {
+        fStatus.value = fStatus.value === s.key ? "" : s.key;
+        render();
+      });
+      li.appendChild(btn);
+      countsEl.appendChild(li);
+    });
+  }
+
+  function card(r, today) {
+    var li = el("li", { "class": "card", id: r.id ? "p-" + r.id : null });
+
+    var head = el("div", { "class": "card-head" });
+    head.appendChild(el("span", { "class": "speaker" }, r.speaker || "Unknown speaker"));
+    head.appendChild(el("span", { "class": "pill s-" + r.status }, STATUS_LABEL[r.status]));
+    li.appendChild(head);
+
+    li.appendChild(el("blockquote", { "class": "claim" }, "“" + (r.claim || "") + "”"));
+
+    var dl = el("dl", { "class": "meta" });
+    function row(label, content) {
+      dl.appendChild(el("dt", null, label));
+      var dd = el("dd");
+      if (typeof content === "string") dd.textContent = content; else dd.appendChild(content);
+      dl.appendChild(dd);
+    }
+    row("Said", r.said_on ? fmtDate(r.said_on) : "Date unknown");
+
+    var dl2 = document.createDocumentFragment();
+    dl2.appendChild(document.createTextNode(r.deadline ? fmtDate(r.deadline) : "No deadline"));
+    if (r.deadline && isDate(r.deadline) && r.status === "pending" && r.deadline < today) {
+      dl2.appendChild(document.createTextNode(" "));
+      dl2.appendChild(el("span", { "class": "warn" }, "(deadline passed, awaiting check)"));
+    }
+    var dlWrap = el("span"); dlWrap.appendChild(dl2);
+    row("Check by", dlWrap);
+
+    if (r.source_url) {
+      var src = el("span");
+      src.appendChild(link(r.source_url, "Source"));
+      if (r.source_time) src.appendChild(document.createTextNode(" at " + r.source_time));
+      row("Source", src);
+    } else {
+      row("Source", el("span", { "class": "warn" }, "No source link"));
+    }
+
+    if (r.evidence_url) row("Evidence", link(r.evidence_url, "Evidence"));
+    else if (NEEDS_EVIDENCE[r.status]) row("Evidence", el("span", { "class": "warn" }, "Missing: this status needs an evidence link"));
+    else row("Evidence", "None yet");
+
+    row("Checked", r.checked_on ? fmtDate(r.checked_on) : "Not checked yet");
+    li.appendChild(dl);
+
+    if (r.notes) li.appendChild(el("p", { "class": "notes" }, r.notes));
+    return li;
+  }
+
+  function renderStats() {
+    var statsEl = document.getElementById("stats");
+    if (!records.length) { statsEl.hidden = true; return; }
+    var resolved = records.filter(function (r) { return NEEDS_EVIDENCE[r.status]; }).length;
+    statsEl.textContent = "";
+    statsEl.appendChild(el("b", null, String(records.length)));
+    statsEl.appendChild(document.createTextNode(records.length === 1 ? " prediction tracked · " : " predictions tracked · "));
+    statsEl.appendChild(el("b", null, String(resolved)));
+    statsEl.appendChild(document.createTextNode(" resolved with evidence"));
+    statsEl.hidden = false;
+  }
+
+  function render() {
+    var sp = fSpeaker.value, st = fStatus.value;
+    var bySpeaker = records.filter(function (r) { return !sp || r.speaker === sp; });
+    var shown = bySpeaker.filter(function (r) { return !st || r.status === st; });
+
+    renderCounts(bySpeaker);
+
+    listEl.textContent = "";
+    var today = todayISO();
+    var frag = document.createDocumentFragment();
+    shown.forEach(function (r) { frag.appendChild(card(r, today)); });
+    listEl.appendChild(frag);
+
+    if (!records.length) {
+      emptyEl.textContent = "No predictions yet";
+      emptyEl.hidden = false;
+    } else if (!shown.length) {
+      emptyEl.textContent = "No predictions match these filters";
+      emptyEl.hidden = false;
+    } else {
+      emptyEl.hidden = true;
+    }
+    listEl.hidden = !shown.length;
+    resultEl.textContent = shown.length + " of " + records.length + " predictions shown";
+    renderStats();
+  }
+
+  fSpeaker.addEventListener("change", render);
+  fStatus.addEventListener("change", render);
+  render();
+
+  // ---------- theme (dark by default) ----------
+  var root = document.documentElement;
+  var themeBtn = document.getElementById("theme-btn");
+  function applyTheme(t) {
+    t = t === "light" ? "light" : "dark";
+    if (t === "light") root.setAttribute("data-theme", "light");
+    else root.removeAttribute("data-theme");
+    var next = t === "light" ? "dark" : "light";
+    themeBtn.setAttribute("aria-label", "Switch to " + next + " theme");
+    themeBtn.title = "Switch to " + next + " theme";
+    return t;
+  }
+  var current = "dark";
+  try { current = localStorage.getItem("theme") || "dark"; } catch (e) {}
+  current = applyTheme(current);
+  themeBtn.addEventListener("click", function () {
+    current = applyTheme(current === "light" ? "dark" : "light");
+    try {
+      if (current === "dark") localStorage.removeItem("theme");
+      else localStorage.setItem("theme", "light");
+    } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>
