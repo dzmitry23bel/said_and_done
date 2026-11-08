@@ -182,5 +182,125 @@ const PREDICTIONS = [
     evidence_url: "https://www.inverse.com/article/49356-tesla-autopilot-update-v9-video-shows-the-3-retro-atari-games-in-action",
     checked_on: "2026-11-08",
     notes: "Software V9 shipped with Missile Command, Lunar Lander and Centipede, reported on September 27, 2018. Deadline: \"just putting\" read as the end of 2018."
+  },
+
+  // Source: "Elon Musk: A future worth getting excited about | Tesla Texas Gigafactory interview | TED", YouTube, published 2022-04-18.
+  // Recorded at Giga Texas the day before it opened, per the interview.
+  {
+    id: "em-2022-fsd-solved-this-year",
+    speaker: "Elon Musk",
+    claim: "I actually am confident that we will solve it this year… The probability of an accident, at what point do you exceed that of the average person? I think we will exceed that this year.",
+    said_on: "2022-04-18",
+    source_url: "https://www.youtube.com/watch?v=YRvf00NooN8",
+    source_time: "12:27",
+    deadline: "2022-12-31",
+    status: "not_happened",
+    evidence_url: "https://insideevs.com/news/618181/musk-tesla-fsd-regulator-approval-2022/",
+    checked_on: "2026-11-08",
+    notes: "In October 2022 Musk said FSD would not get regulatory approval to operate without a driver that year. The source covers approval, not crash statistics."
+  },
+  {
+    id: "em-2022-optimus-prototype-this-year",
+    speaker: "Elon Musk",
+    claim: "I think we'll have like an interesting prototype sometime this year.",
+    said_on: "2022-04-18",
+    source_url: "https://www.youtube.com/watch?v=YRvf00NooN8",
+    source_time: "25:10",
+    deadline: "2022-12-31",
+    status: "happened",
+    evidence_url: "https://www.designboom.com/technology/tesla-ai-day-2022-optimus-bot-prototype-demo-10-03-2022/",
+    checked_on: "2026-11-08",
+    notes: "Tesla showed an Optimus humanoid prototype at AI Day on September 30, 2022."
+  },
+  {
+    id: "em-2022-optimus-useful-two-years",
+    speaker: "Elon Musk",
+    claim: "We might have something useful next year, but I think quite likely within at least two years.",
+    said_on: "2022-04-18",
+    source_url: "https://www.youtube.com/watch?v=YRvf00NooN8",
+    source_time: "25:15",
+    deadline: "2024-04-18",
+    status: "partial",
+    evidence_url: "https://www.teslarati.com/tesla-optimus-sorting-battery-cells/",
+    checked_on: "2026-11-08",
+    notes: "On May 5, 2024, 17 days after the deadline, Tesla posted a video of Optimus sorting battery cells on its own; the claim comes from Tesla, with no independent check. Deadline is two years after publication."
+  },
+  {
+    id: "em-2022-giga-texas-100gwh",
+    speaker: "Elon Musk",
+    claim: "Asked about the goal of producing 100 gigawatt hours of batteries a year at Giga Texas: \"We will probably do more than that, but yes, hopefully we get there within a couple of years.\"",
+    said_on: "2022-04-18",
+    source_url: "https://www.youtube.com/watch?v=YRvf00NooN8",
+    source_time: "5:28",
+    deadline: "2024-04-18",
+    status: "not_happened",
+    evidence_url: "https://insideevs.com/news/713173/tesla-texas-4680-battery-production-record/",
+    checked_on: "2026-11-08",
+    notes: "In March 2024 InsideEVs estimated Giga Texas 4680 cell output at a little over 6 GWh a year, based on Tesla's Cybertruck figure; Tesla gave no official rate. Deadline: \"a couple of years\" read as two years."
+  },
+  {
+    id: "em-2022-neuralink-human-implant-this-year",
+    speaker: "Elon Musk",
+    claim: "We have put in our FDA application to aspirationally do the first human implant this year.",
+    said_on: "2022-04-18",
+    source_url: "https://www.youtube.com/watch?v=YRvf00NooN8",
+    source_time: "32:14",
+    deadline: "2022-12-31",
+    status: "partial",
+    evidence_url: "https://pbs.org/newshour/science/elon-musk-says-the-first-human-has-received-an-implant-from-neuralink-but-details-are-scant",
+    checked_on: "2026-11-08",
+    notes: "It happened late: the first human implant came at the end of January 2024, about a year after the deadline. He called the timeline aspirational."
+  },
+  {
+    id: "em-2022-starship-orbital-few-months",
+    speaker: "Elon Musk",
+    claim: "It's looking promising for us to have an orbital launch attempt in a few months… assuming we get regulatory approval, I think we could have an orbital launch attempt within a few months.",
+    said_on: "2022-04-18",
+    source_url: "https://www.youtube.com/watch?v=YRvf00NooN8",
+    source_time: "42:35",
+    deadline: "2022-10-18",
+    status: "partial",
+    evidence_url: "https://en.wikipedia.org/wiki/Starship_flight_test_1",
+    checked_on: "2026-11-08",
+    notes: "It happened late: the first full Starship flight test launched on April 20, 2023 and was destroyed before reaching orbit. He made the timeline depend on regulatory approval. Deadline: \"a few months\" read as six months."
+  },
+  {
+    id: "em-2022-home-robot-under-10y",
+    speaker: "Elon Musk",
+    claim: "Asked when people could buy a humanoid robot for home, for their parents for Christmas: \"I'd say in less than ten years.\"",
+    said_on: "2022-04-18",
+    source_url: "https://www.youtube.com/watch?v=YRvf00NooN8",
+    source_time: "25:39",
+    deadline: "2032-04-18",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Deadline is ten years after the video's publication date."
+  },
+  {
+    id: "em-2022-neuralink-injuries-decade",
+    speaker: "Elon Musk",
+    claim: "For many years, we will just be solving brain injuries and spinal injuries. For probably a decade.",
+    said_on: "2022-04-18",
+    source_url: "https://www.youtube.com/watch?v=YRvf00NooN8",
+    source_time: "33:07",
+    deadline: "2032-04-18",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "About when a high-bandwidth interface for AI-human symbiosis could exist. Deadline is ten years after the video's publication date."
+  },
+  {
+    id: "em-2022-buddy-robot-2050",
+    speaker: "Elon Musk",
+    claim: "Asked whether by 2050 there will be a robot in most homes: \"Yeah, you'll have your sort of buddy robot probably, yeah.\"",
+    said_on: "2022-04-18",
+    source_url: "https://www.youtube.com/watch?v=YRvf00NooN8",
+    source_time: "24:17",
+    deadline: "2050-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "The year 2050 comes from the interviewer's question."
   }
 ];

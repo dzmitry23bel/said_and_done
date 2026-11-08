@@ -30,6 +30,8 @@ Rules:
 
 - Add a record only when you have the quote and the source in front of you.
 - `happened`, `partial` and `not_happened` need a public `evidence_url`. Without one, use `pending` or `too_early`.
+- If it came true only after the deadline, use `partial` and say in `notes` when it happened.
+- When the speaker gives no exact date ("a few months", "about to"), pick one, and say in `notes` how you read it.
 - Don't guess dates, timestamps or links. Leave the field as `""` and say so in `notes`.
 - Set `checked_on` to the current date whenever you set or change `status`.
 - Keep `notes` to what the sources show, with no judgements about the speaker.
