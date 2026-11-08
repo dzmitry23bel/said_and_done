@@ -475,5 +475,33 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-08",
     notes: "He adds that phones already do it \"fairly decently\". Deadline: \"a few years\" read as three years."
+  },
+
+  // Source: "Nvidia CEO Jensen Huang gives a keynote address at the GTC conference in Washington", YouTube, 2025-10-28.
+  {
+    id: "jh-2025-rubin-production-next-year",
+    speaker: "Jensen Huang",
+    claim: "While we're shipping GB300s, we're preparing Rubin to be in production, you know, this time next year, maybe slightly earlier.",
+    said_on: "2025-10-28",
+    source_url: "https://www.youtube.com/watch?v=xDjbj_sLy_s",
+    source_time: "1:04:36",
+    deadline: "2026-10-28",
+    status: "happened",
+    evidence_url: "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Vera-Rubin-Ramps-Into-Full-Production-to-Power-Agentic-AI-Factories-Worldwide/default.aspx",
+    checked_on: "2026-11-08",
+    notes: "On May 31, 2026, ahead of the deadline, Nvidia announced that Vera Rubin was ramping into full production, with shipments to start that fall. The evidence is Nvidia's own press release."
+  },
+  {
+    id: "jh-2025-half-trillion-blackwell-rubin-2026",
+    speaker: "Jensen Huang",
+    claim: "We're probably the first technology company in history to have visibility into half a trillion dollars of cumulative Blackwell and early ramps of Rubin through 2026.",
+    said_on: "2025-10-28",
+    source_url: "https://www.youtube.com/watch?v=xDjbj_sLy_s",
+    source_time: "57:01",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "\"Visibility\" refers to business already on the books, not revenue. He says the figure excludes China. Can be checked against Nvidia's results for the quarter ending in early 2027."
   }
 ];
