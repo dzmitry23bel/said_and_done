@@ -141,5 +141,46 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-08",
     notes: "Earlier (1:04:06) he says it is inevitable \"if current trends continue\". Deadline is twenty years after the video's publication date; the number comes from auto-captions."
+  },
+
+  // Source: "Joe Rogan Experience #1169 - Elon Musk", YouTube, 2018-09-07.
+  {
+    id: "em-2018-neuralink-announce-few-months",
+    speaker: "Elon Musk",
+    claim: "I think we'll have something interesting to announce in a few months that's at least an order of magnitude better than anything else, probably… better than anyone thinks is possible.",
+    said_on: "2018-09-07",
+    source_url: "https://www.youtube.com/watch?v=ycPr5-27vSI",
+    source_time: "25:13",
+    deadline: "2019-03-07",
+    status: "partial",
+    evidence_url: "https://geneticliteracyproject.org/2019/07/22/what-we-know-about-elon-musks-dramatic-plan-to-link-human-brains-to-computers-through-implants/",
+    checked_on: "2026-11-08",
+    notes: "Neuralink's first public presentation came on July 16, 2019, about ten months later; the source does not confirm the \"order of magnitude\" claim. Deadline: \"a few months\" read as six months."
+  },
+  {
+    id: "em-2018-highway-autopilot-lane-changes",
+    speaker: "Elon Musk",
+    claim: "We're about to release the software that will enable you to just turn it on and it'll drive from highway on-ramp to highway exit, do lane changes to overtake other cars, go from one interchange to the next…",
+    said_on: "2018-09-07",
+    source_url: "https://www.youtube.com/watch?v=ycPr5-27vSI",
+    source_time: "1:01:10",
+    deadline: "2018-12-31",
+    status: "partial",
+    evidence_url: "https://electrek.co/2018/10/27/tesla-navigate-on-autopilot-demo-rollout/",
+    checked_on: "2026-11-08",
+    notes: "Navigate on Autopilot began rolling out in the US in late October 2018, but at launch the driver had to confirm every lane change. Deadline: \"about to\" read as the end of 2018."
+  },
+  {
+    id: "em-2018-tesla-atari-games",
+    speaker: "Elon Musk",
+    claim: "We're just putting the Atari emulator in it, so you'll be able to play Missile Command and Lunar Lander and a bunch of other things.",
+    said_on: "2018-09-07",
+    source_url: "https://www.youtube.com/watch?v=ycPr5-27vSI",
+    source_time: "58:40",
+    deadline: "2018-12-31",
+    status: "happened",
+    evidence_url: "https://www.inverse.com/article/49356-tesla-autopilot-update-v9-video-shows-the-3-retro-atari-games-in-action",
+    checked_on: "2026-11-08",
+    notes: "Software V9 shipped with Missile Command, Lunar Lander and Centipede, reported on September 27, 2018. Deadline: \"just putting\" read as the end of 2018."
   }
 ];
