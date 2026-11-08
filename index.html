@@ -140,6 +140,14 @@
   .meta dt { color: var(--muted); }
   .meta dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
   .notes { margin: 12px 0 0; font-size: 0.92rem; color: var(--muted); overflow-wrap: anywhere; }
+  .timeline { margin-top: 12px; }
+  .tl-bar { height: 6px; border-radius: 999px; background: var(--border); overflow: hidden; }
+  .tl-fill { display: block; height: 100%; border-radius: 999px; background: var(--accent); }
+  .tl-overdue .tl-fill { background: var(--warn-fg); }
+  .tl-happened .tl-fill { background: var(--happened-fg); }
+  .tl-partial .tl-fill { background: var(--partial-fg); }
+  .tl-not_happened .tl-fill { background: var(--not-fg); }
+  .tl-label { margin-top: 5px; font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
   .warn { color: var(--warn-fg); font-size: 0.85rem; }
   .card-foot { display: flex; justify-content: flex-start; margin-top: 12px; }
   .reactions { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -355,6 +363,40 @@
     });
   }
 
+  // ---------- time progress (said_on -> deadline) ----------
+  function dayNum(iso) { var p = iso.split("-"); return Date.UTC(+p[0], +p[1] - 1, +p[2]) / 86400000; }
+  function span(days) {
+    days = Math.round(Math.abs(days));
+    if (days >= 365) {
+      var y = Math.floor(days / 365.25), m = Math.floor((days - y * 365.25) / 30.44);
+      return y + (y === 1 ? " year" : " years") + (m ? " " + m + (m === 1 ? " month" : " months") : "");
+    }
+    if (days >= 60) { var mo = Math.round(days / 30.44); return mo + " months"; }
+    return days + (days === 1 ? " day" : " days");
+  }
+  function timeline(r, today) {
+    if (!isDate(r.said_on) || !isDate(r.deadline)) return null;
+    var start = dayNum(r.said_on), end = dayNum(r.deadline), now = dayNum(today);
+    if (end <= start) return null;
+    var pct = Math.max(0, Math.min(100, Math.round((now - start) / (end - start) * 100)));
+    var resolved = NEEDS_EVIDENCE[r.status], overdue = !resolved && now > end;
+    var label = now >= end
+      ? (resolved ? "Deadline was " + span(now - end) + " ago" : "Deadline passed " + span(now - end) + " ago")
+      : pct + "% of the time window passed · " + span(end - now) + " left";
+    var wrap = el("div", { "class": "timeline" });
+    var bar = el("div", {
+      "class": "tl-bar" + (resolved ? " tl-" + r.status : overdue ? " tl-overdue" : ""),
+      role: "progressbar", "aria-valuemin": "0", "aria-valuemax": "100", "aria-valuenow": String(pct),
+      "aria-label": "Time from statement to deadline"
+    });
+    var fill = el("span", { "class": "tl-fill" });
+    fill.style.width = pct + "%";
+    bar.appendChild(fill);
+    wrap.appendChild(bar);
+    wrap.appendChild(el("div", { "class": "tl-label" }, label));
+    return wrap;
+  }
+
   function card(r, today) {
     var li = el("li", { "class": "card", id: r.id ? "p-" + r.id : null });
 
@@ -398,6 +440,8 @@
 
     row("Checked", r.checked_on ? fmtDate(r.checked_on) : "Not checked yet");
     li.appendChild(dl);
+    var tl = timeline(r, today);
+    if (tl) li.appendChild(tl);
 
     if (r.notes) li.appendChild(el("p", { "class": "notes" }, r.notes));
     if (likes.ready && r.id) {
