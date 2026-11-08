@@ -140,6 +140,20 @@
   .meta dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
   .notes { margin: 12px 0 0; font-size: 0.92rem; color: var(--muted); overflow-wrap: anywhere; }
   .warn { color: var(--warn-fg); font-size: 0.85rem; }
+  .card-foot { display: flex; justify-content: flex-end; margin-top: 12px; }
+  .like {
+    font: inherit; font-size: 0.88rem; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--muted); background: transparent;
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 4px 12px;
+  }
+  .like:hover { color: var(--text); }
+  .like svg { flex: none; }
+  .like[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+  .like[aria-pressed="true"] svg path { fill: currentColor; }
+  .like b { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .like:disabled { cursor: progress; opacity: 0.7; }
 
   .empty {
     text-align: center; color: var(--muted);
@@ -204,7 +218,9 @@
 
   <footer>
     <p>Independent project. Not affiliated with, endorsed by, or produced by any person named here. Quotes are taken from the linked sources; status reflects the evidence shown and the date it was checked.</p>
+    <p id="likes-note" hidden>Likes are anonymous: no accounts, no cookies, no analytics. To count one like per network, the server keeps a one-way code made from your IP address and the prediction; the address itself is never stored.</p>
   </footer>
+  <div id="ts-box" hidden></div>
 </div>
 
 <script src="predictions.js"></script>
@@ -222,6 +238,14 @@
   var STATUS_LABEL = {};
   STATUSES.forEach(function (s) { STATUS_LABEL[s.key] = s.label; });
   var NEEDS_EVIDENCE = { happened: true, partial: true, not_happened: true };
+
+  var likes = { ready: false, counts: {}, mine: {} };
+
+  // ---------- likes config ----------
+  // URL of the likes Worker, e.g. "https://said-and-done-likes.<name>.workers.dev". Empty = likes off.
+  var LIKES_API = "";
+  // Cloudflare Turnstile site key. Empty = off (reserve, only if someone spams likes).
+  var TURNSTILE_SITEKEY = "";
   var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   var data = (typeof PREDICTIONS !== "undefined" && Array.isArray(PREDICTIONS)) ? PREDICTIONS : [];
@@ -367,6 +391,11 @@
     li.appendChild(dl);
 
     if (r.notes) li.appendChild(el("p", { "class": "notes" }, r.notes));
+    if (likes.ready && r.id) {
+      var foot = el("div", { "class": "card-foot" });
+      foot.appendChild(likeButton(r.id));
+      li.appendChild(foot);
+    }
     return li;
   }
 
@@ -412,6 +441,112 @@
   fSpeaker.addEventListener("change", render);
   fStatus.addEventListener("change", render);
   render();
+
+  // ---------- likes ----------
+  function likeButton(id) {
+    var on = !!likes.mine[id];
+    var b = el("button", { type: "button", "class": "like", "aria-pressed": on ? "true" : "false", "data-id": id });
+    b.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.2-9.4C1.6 7.6 3.9 4.5 7.2 4.5c2 0 3.5 1.1 4.8 2.8 1.3-1.7 2.8-2.8 4.8-2.8 3.3 0 5.6 3.1 4.4 6.6-1.7 4.8-9.2 9.4-9.2 9.4Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
+    b.appendChild(el("span", { "class": "sr-only" }, on ? "Unlike" : "Like"));
+    b.appendChild(el("b", null, String(likes.counts[id] || 0)));
+    b.title = on ? "Remove your like" : "Like";
+    b.addEventListener("click", function () { toggleLike(id, b); });
+    return b;
+  }
+
+  function paintLike(b, id) {
+    var on = !!likes.mine[id];
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+    b.querySelector(".sr-only").textContent = on ? "Unlike" : "Like";
+    b.querySelector("b").textContent = String(likes.counts[id] || 0);
+    b.title = on ? "Remove your like" : "Like";
+  }
+
+  function saveMine() {
+    try { localStorage.setItem("liked", JSON.stringify(likes.mine)); } catch (e) {}
+  }
+
+  function toggleLike(id, b) {
+    if (b.disabled) return;
+    var wasOn = !!likes.mine[id], prevCount = likes.counts[id] || 0;
+    // optimistic update
+    if (wasOn) delete likes.mine[id]; else likes.mine[id] = 1;
+    likes.counts[id] = Math.max(0, prevCount + (wasOn ? -1 : 1));
+    paintLike(b, id);
+    b.disabled = true;
+
+    getTurnstileToken().then(function (token) {
+      var body = { id: id, action: wasOn ? "unlike" : "like" };
+      if (token) body.turnstile = token;
+      return fetch(LIKES_API + "/like", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
+      });
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (!res.ok) throw { status: res.status, data: data };
+        likes.counts[id] = data.count;
+        if (data.liked) likes.mine[id] = 1; else delete likes.mine[id];
+        saveMine();
+      });
+    }).catch(function (err) {
+      if (wasOn) likes.mine[id] = 1; else delete likes.mine[id];
+      likes.counts[id] = prevCount;
+      var s = err && err.status;
+      b.title = s === 429 ? "Too many likes in a minute. Try again shortly."
+              : s === 503 ? "Likes are paused right now."
+              : "Couldn't save your like. Try again later.";
+      console.warn("Like failed", err);
+    }).then(function () {
+      b.disabled = false;
+      var t = b.title; paintLike(b, id);
+      if (!/^(Like|Remove your like)$/.test(t)) b.title = t;
+    });
+  }
+
+  // Turnstile (reserve): loaded only when TURNSTILE_SITEKEY is set.
+  var ts = { loading: null, widget: null, waiters: [] };
+  function getTurnstileToken() {
+    if (!TURNSTILE_SITEKEY) return Promise.resolve("");
+    if (!ts.loading) {
+      ts.loading = new Promise(function (resolve, reject) {
+        var sc = document.createElement("script");
+        sc.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+        sc.async = true; sc.onload = resolve; sc.onerror = reject;
+        document.head.appendChild(sc);
+      }).then(function () {
+        var box = document.getElementById("ts-box"); box.hidden = false;
+        ts.widget = window.turnstile.render(box, {
+          sitekey: TURNSTILE_SITEKEY, execution: "execute", appearance: "interaction-only",
+          callback: function (tok) { var w = ts.waiters; ts.waiters = []; w.forEach(function (f) { f(tok); }); }
+        });
+      });
+    }
+    return ts.loading.then(function () {
+      return new Promise(function (resolve) {
+        ts.waiters.push(resolve);
+        window.turnstile.reset(ts.widget);
+        window.turnstile.execute(ts.widget);
+      });
+    });
+  }
+
+  if (LIKES_API && records.length) {
+    try { likes.mine = JSON.parse(localStorage.getItem("liked") || "{}") || {}; } catch (e) { likes.mine = {}; }
+    fetch(LIKES_API + "/likes").then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    }).then(function (data) {
+      likes.counts = (data && data.counts) || {};
+      // A remembered like on a prediction the server counts as 0 (e.g. after a reset) is stale.
+      Object.keys(likes.mine).forEach(function (id) { if (!likes.counts[id]) delete likes.mine[id]; });
+      saveMine();
+      likes.ready = true;
+      document.getElementById("likes-note").hidden = false;
+      render();
+    }).catch(function (err) {
+      console.warn("Likes unavailable; hiding like buttons.", err);
+    });
+  }
 
   // ---------- theme (dark by default) ----------
   var root = document.documentElement;

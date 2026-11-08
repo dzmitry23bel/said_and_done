@@ -83,3 +83,59 @@ The site's favicon is the same mark, embedded in `index.html`.
 Lime is for marks, links and highlights on dark backgrounds only. It isn't readable as text on white, so light surfaces use the olive.
 
 Status colours are separate from the brand and keep their meaning everywhere: pending (grey-blue), happened (mint), partial (amber), did not happen (red), too early (violet). "Happened" is mint rather than green so it doesn't merge with the lime accent.
+
+## Likes
+
+Visitors can like a prediction. Counts are shared and stored by a small Cloudflare Worker with a D1 database in `worker/`. The site itself stays static: if `LIKES_API` in `index.html` is empty, or the Worker is unreachable, the like buttons are hidden and everything else works.
+
+**What is stored:** a count per prediction, plus one row per (prediction, network) holding `HMAC(secret, ip|id)`. That one-way code can't be turned back into an IP. No cookies, accounts or analytics. The visitor's own likes are remembered in their browser (`localStorage`).
+
+**Spam protection:**
+
+- only ids found in the published `predictions.js` can be liked;
+- one like per network per prediction;
+- 10 like/unlike requests per IP per minute;
+- browsers on other sites are refused (`ALLOWED_ORIGINS`);
+- on the free plan the worst case is the daily quota running out: likes pause until midnight UTC, no bill.
+
+### First-time setup
+
+Needs Node.js 18+ (`winget install OpenJS.NodeJS.LTS` on Windows) and a free Cloudflare account. Run in `worker/`:
+
+```bash
+npx wrangler login
+npx wrangler d1 create said-and-done-likes
+```
+
+Copy the printed `database_id` into `wrangler.toml`, then:
+
+```bash
+npx wrangler d1 execute said-and-done-likes --remote --file=schema.sql
+npx wrangler secret put LIKE_SECRET
+npx wrangler deploy
+```
+
+For `LIKE_SECRET` paste any long random string (e.g. from a password generator) and don't share it. `deploy` prints the Worker URL, like `https://said-and-done-likes.<name>.workers.dev`. Put it in `index.html` as `LIKES_API` (no trailing slash) and push.
+
+GitHub Pages must be on: the Worker reads ids from `PREDICTIONS_URL`.
+
+### Admin
+
+```bash
+# pause all likes: set LIKES_FROZEN = "true" in wrangler.toml, then
+npx wrangler deploy
+
+# reset one prediction
+npx wrangler d1 execute said-and-done-likes --remote --command "DELETE FROM likes WHERE pred_id='ID'; DELETE FROM counts WHERE pred_id='ID';"
+
+# see counts
+npx wrangler d1 execute said-and-done-likes --remote --command "SELECT * FROM counts ORDER BY n DESC;"
+```
+
+### If spam gets through: Turnstile (off by default)
+
+1. In the Cloudflare dashboard create a Turnstile widget for `dzmitry23bel.github.io` (mode: Invisible or Managed).
+2. `npx wrangler secret put TURNSTILE_SECRET` with its secret key.
+3. Put its site key in `index.html` as `TURNSTILE_SITEKEY` and push.
+
+This loads a script from `challenges.cloudflare.com`, so keep it off unless needed. To turn it off again: `npx wrangler secret delete TURNSTILE_SECRET` and empty `TURNSTILE_SITEKEY`.
