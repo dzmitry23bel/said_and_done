@@ -48,6 +48,7 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
@@ -205,6 +206,13 @@
         <label for="f-status">Status</label>
         <select id="f-status"><option value="">All statuses</option></select>
       </div>
+      <div class="field" id="sort-field" hidden>
+        <label for="f-sort">Sort</label>
+        <select id="f-sort">
+          <option value="hot" selected>Hottest</option>
+          <option value="new">Newest</option>
+        </select>
+      </div>
     </div>
 
     <h2 class="sr-only">Counts by status</h2>
@@ -313,6 +321,7 @@
   // ---------- filters ----------
   var fSpeaker = document.getElementById("f-speaker");
   var fStatus = document.getElementById("f-status");
+  var fSort = document.getElementById("f-sort");
   var countsEl = document.getElementById("counts");
   var listEl = document.getElementById("list");
   var emptyEl = document.getElementById("empty");
@@ -415,6 +424,12 @@
     var sp = fSpeaker.value, st = fStatus.value;
     var bySpeaker = records.filter(function (r) { return !sp || r.speaker === sp; });
     var shown = bySpeaker.filter(function (r) { return !st || r.status === st; });
+    // Hottest = most likes first. records are already newest-first and sort is stable,
+    // so ties stay newest-first. Without likes the order is simply newest-first.
+    // Cards are not re-sorted when someone clicks like, so nothing jumps under the cursor.
+    if (likes.ready && fSort.value === "hot") {
+      shown = shown.slice().sort(function (a, b) { return (likes.counts[b.id] || 0) - (likes.counts[a.id] || 0); });
+    }
 
     renderCounts(bySpeaker);
 
@@ -440,6 +455,7 @@
 
   fSpeaker.addEventListener("change", render);
   fStatus.addEventListener("change", render);
+  fSort.addEventListener("change", render);
   render();
 
   // ---------- likes ----------
@@ -542,6 +558,7 @@
       saveMine();
       likes.ready = true;
       document.getElementById("likes-note").hidden = false;
+      document.getElementById("sort-field").hidden = false;
       render();
     }).catch(function (err) {
       console.warn("Likes unavailable; hiding like buttons.", err);
