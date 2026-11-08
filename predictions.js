@@ -46,6 +46,111 @@ const CHAINS = {
 };
 
 const PREDICTIONS = [
+  // Source: "Elon Musk Just Predicted the Next 3 Years (Ron Baron Full Interview)", YouTube, published 2026-11-06.
+  {
+    id: "em-2026-ship42-tower-catch-week",
+    speaker: "Elon Musk",
+    claim: "…with ship 42… we can try to catch [it] with the tower. So, that's what we're going to do in about a week from now.",
+    said_on: "2026-11-06",
+    source_url: "https://www.youtube.com/watch?v=IjWbvz95w08",
+    source_time: "43:39",
+    deadline: "2026-11-13",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "About an attempt to catch the Starship upper stage (Ship 42) with the launch tower arms. Deadline: \"about a week\" counted from the video's publication date; the recording date may be earlier."
+  },
+  {
+    id: "em-2026-spacex-arr-100b-december",
+    speaker: "Elon Musk",
+    claim: "We are tracking to have an annual rate of revenue that is in excess of hundred billion in December.",
+    said_on: "2026-11-06",
+    source_url: "https://www.youtube.com/watch?v=IjWbvz95w08",
+    source_time: "25:22",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "About SpaceX's annualized revenue run rate in December 2026. Needs a public source for SpaceX revenue to be checked."
+  },
+  {
+    id: "em-2026-spacex-q4-revenue-70pct",
+    speaker: "Elon Musk",
+    claim: "I'm not sure what the exact numbers will be Q3 to Q4, but probably something like 70%.",
+    said_on: "2026-11-06",
+    source_url: "https://www.youtube.com/watch?v=IjWbvz95w08",
+    source_time: "19:48",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "About SpaceX revenue growth from Q3 to Q4 2026, said right after a Q2-to-Q3 increase of \"over 80%\". Needs a public source for SpaceX quarterly revenue to be checked."
+  },
+  {
+    id: "em-2026-spacex-arr-500b-dec-2027",
+    speaker: "Elon Musk",
+    claim: "It seems quite likely that our annual recurring revenue in December of next year will exceed 500 billion.",
+    said_on: "2026-11-06",
+    source_url: "https://www.youtube.com/watch?v=IjWbvz95w08",
+    source_time: "25:47",
+    deadline: "2027-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "About SpaceX's annual recurring revenue in December 2027. He added it is \"not a promise\" but his \"best guess\", and that a trillion is \"not out of the question\" (about 2% likely)."
+  },
+  {
+    id: "em-2026-orbital-compute-launch-q3-2027",
+    speaker: "Elon Musk",
+    claim: "We expect to start launching the first Star Mind computers, which we've co-designed with Nvidia, probably… in the third quarter of next year.",
+    said_on: "2026-11-06",
+    source_url: "https://www.youtube.com/watch?v=IjWbvz95w08",
+    source_time: "33:29",
+    deadline: "2027-09-30",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "About space-based AI computers. \"Star Mind\" is spelled as in the auto-generated transcript; the official spelling is not confirmed. He added \"I'm just guessing here\"."
+  },
+  {
+    id: "em-2026-orbital-compute-volume-2028",
+    speaker: "Elon Musk",
+    claim: "We'll start off slow, but then it will ramp to significant volume probably in '28, and then very, very large volume in '29.",
+    said_on: "2026-11-06",
+    source_url: "https://www.youtube.com/watch?v=IjWbvz95w08",
+    source_time: "33:45",
+    deadline: "2028-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "Continues the statement about space-based AI computers. Checked against the 2028 part; \"significant volume\" has no number attached."
+  },
+  {
+    id: "em-2026-orbit-cheaper-than-air-freight",
+    speaker: "Elon Musk",
+    claim: "Probably within, say, 2 or 3 years the cost of a ton to orbit will be less than the cost of air freight from California to Australia.",
+    said_on: "2026-11-06",
+    source_url: "https://www.youtube.com/watch?v=IjWbvz95w08",
+    source_time: "35:49",
+    deadline: "2029-11-06",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "About Starship launch cost per ton. Deadline: \"2 or 3 years\" read as three years from the video's publication date."
+  },
+  {
+    id: "em-2026-starlink-bandwidth-100x",
+    speaker: "Elon Musk",
+    claim: "The amount of bandwidth that Starlink will produce in two or 3 years will be 100 times more bandwidth than it currently offers.",
+    said_on: "2026-11-06",
+    source_url: "https://www.youtube.com/watch?v=IjWbvz95w08",
+    source_time: "49:40",
+    deadline: "2029-11-06",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-08",
+    notes: "About total Starlink network capacity, with V3 satellites. Deadline: \"two or 3 years\" read as three years from the video's publication date."
+  },
   // Source: "The full-length interview with Elon Musk | The Economist", YouTube, published 2026-07-29.
   {
     id: "em-2026-ai-exceeds-humans-5y",
