@@ -912,5 +912,59 @@ const PREDICTIONS = [
     evidence_url: "https://techcrunch.com/2025/02/26/amazon-unveils-a-new-and-improved-alexa-alexa/",
     checked_on: "2026-11-09",
     notes: "Amazon unveiled the generative-AI Alexa+ on February 26, 2025, with early access from March 2025, after the deadline. Deadline: “about to” read as the end of 2023. “A lot smarter” has no agreed measure; checked against the Alexa+ launch."
+  },
+
+  // Source: "Jeff Bezos At The Economic Club Of Washington (9/13/18)", CNBC, YouTube, 2018-09-13.
+  {
+    id: "jb-2018-hq2-decision-2018",
+    speaker: "Jeff Bezos",
+    claim: "…the answer is very simple, we will announce the decision before the end of this year.",
+    said_on: "2018-09-13",
+    source_url: "https://www.youtube.com/watch?v=xv_vkA0jsyo",
+    source_time: "12:23",
+    deadline: "2018-12-31",
+    status: "happened",
+    evidence_url: "https://www.aboutamazon.com/news/company-news/amazon-selects-new-york-city-and-northern-virginia-for-new-headquarters",
+    checked_on: "2026-11-09",
+    notes: "Answer to a question about Amazon's second headquarters. On November 13, 2018, Amazon announced it would split it between Long Island City, New York, and Arlington, Virginia. Date from the video title (9/13/18); YouTube lists the stream on September 14."
+  },
+  {
+    id: "jb-2018-montessori-preschools",
+    speaker: "Jeff Bezos",
+    claim: "…full tuition preschool, Montessori inspired… that's gonna be an operating nonprofit… we're gonna operate these schools and we're gonna put them in low-income neighborhoods.",
+    said_on: "2018-09-13",
+    source_url: "https://www.youtube.com/watch?v=xv_vkA0jsyo",
+    source_time: "6:57",
+    deadline: "",
+    status: "happened",
+    evidence_url: "https://www.cnbc.com/2020/09/22/jeff-bezos-to-open-first-location-of-nonprofit-preschool.html",
+    checked_on: "2026-11-09",
+    notes: "No date was given, so there is no deadline. The first tuition-free, Montessori-inspired Bezos Academy opened in Des Moines, Washington, in October 2020; the linked report from September 22, 2020 announces that opening. Date from the video title (9/13/18); YouTube lists the stream on September 14."
+  },
+  {
+    id: "jb-2018-family-shelters-grants",
+    speaker: "Jeff Bezos",
+    claim: "…that's going to be more traditional grant-making philanthropy… identify and fund family homeless shelters.",
+    said_on: "2018-09-13",
+    source_url: "https://www.youtube.com/watch?v=xv_vkA0jsyo",
+    source_time: "8:10",
+    deadline: "",
+    status: "happened",
+    evidence_url: "https://www.cnbc.com/2018/11/20/bezos-day-one-fund-gives-97point5-million-to-help-the-homeless.html",
+    checked_on: "2026-11-09",
+    notes: "No date was given, so there is no deadline. On November 20, 2018, the Day 1 Families Fund announced its first grants: $97.5 million to 24 organizations working on family homelessness. Date from the video title (9/13/18); YouTube lists the stream on September 14."
+  },
+  {
+    id: "jb-2018-blue-origin-budget-2019",
+    speaker: "Jeff Bezos",
+    claim: "…the budget of Blue Origin approaches a billion dollars a year, and next year will be more than a billion dollars.",
+    said_on: "2018-09-13",
+    source_url: "https://www.youtube.com/watch?v=xv_vkA0jsyo",
+    source_time: "8:42",
+    deadline: "2019-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "Blue Origin is private and does not publish its spending; no public evidence of the 2019 figure was found as of the check date. He repeats it at 56:14. Date from the video title (9/13/18); YouTube lists the stream on September 14."
   }
 ];
