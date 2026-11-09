@@ -981,5 +981,46 @@ const PREDICTIONS = [
     evidence_url: "https://www.engadget.com/2016/12/14/amazon-completes-its-first-drone-powered-delivery/",
     checked_on: "2026-11-09",
     notes: "No date was given, so there is no deadline. For Amazon it held: its first Prime Air customer delivery was near Cambridge, England, on December 7, 2016, and US customer deliveries came later. For drone delivery in general it did not: 7-Eleven and Flirtey made the first FAA-approved drone delivery to a US home in Reno on July 22, 2016. He added \"maybe I'm wrong\". Date is the video's publication date; the event may have been earlier."
+  },
+
+  // Source: "Jeff Bezos – March 1998, earliest long speech" (A.B. Dick Lecture, Lake Forest College), YouTube re-upload, March 1998.
+  {
+    id: "jb-1998-music-video-expansion",
+    speaker: "Jeff Bezos",
+    claim: "We're also working on product expansions, so we want to leverage our customer base, our competencies and our brand name into products like music and videos.",
+    said_on: "",
+    source_url: "https://www.youtube.com/watch?v=PnSjKTW28qE",
+    source_time: "46:13",
+    deadline: "",
+    status: "happened",
+    evidence_url: "https://press.aboutamazon.com/1998/6/amazon-com-opens-music-store-provides-a-whole-new-way-to-discover-music",
+    checked_on: "2026-11-09",
+    notes: "No date was given beyond \"the near future\", so there is no deadline. Amazon opened its music store on June 11, 1998, and its video store on November 17, 1998. Lecture at Lake Forest College; the exact day is not confirmed, the video title says March 1998. The video is a re-upload by a private channel."
+  },
+  {
+    id: "jb-1998-german-japanese-books",
+    speaker: "Jeff Bezos",
+    claim: "We're gonna work on geographical expansion, so we want to make it possible for people to buy a Japanese language book anywhere in the world, for people to buy a German language book anywhere in the world.",
+    said_on: "",
+    source_url: "https://www.youtube.com/watch?v=PnSjKTW28qE",
+    source_time: "46:02",
+    deadline: "",
+    status: "happened",
+    evidence_url: "https://press.aboutamazon.com/de/1998/10/amazon-com-jetzt-auch-auf-dem-deutschen-online-buchmarkt-vertreten",
+    checked_on: "2026-11-09",
+    notes: "No date was given beyond \"the near future\", so there is no deadline. Amazon.de opened in October 1998; the Japanese part came later, with Amazon.co.jp in November 2000. Lecture at Lake Forest College; the exact day is not confirmed, the video title says March 1998. The video is a re-upload by a private channel."
+  },
+  {
+    id: "jb-1998-ebooks-majority",
+    speaker: "Jeff Bezos",
+    claim: "I firmly believe that at some point the vast majority of books will be in electronic form. I also believe that's a long way in the future… many more than ten years in the future… some day computer displays will catch up with that.",
+    said_on: "",
+    source_url: "https://www.youtube.com/watch?v=PnSjKTW28qE",
+    source_time: "1:05:54",
+    deadline: "",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "No deadline: he says it is \"many more than ten years\" away and depends on displays catching up with paper. Lecture at Lake Forest College; the exact day is not confirmed, the video title says March 1998. The video is a re-upload by a private channel."
   }
 ];
