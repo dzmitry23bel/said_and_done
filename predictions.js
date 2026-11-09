@@ -871,5 +871,46 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-08",
     notes: "No reliable public evidence of the outcome was found as of the check date. \"Mid-level engineer\" has no agreed test. He adds that it would be expensive to run at first."
+  },
+
+  // Source: "Jeff Bezos: Amazon and Blue Origin | Lex Fridman Podcast #405", YouTube, 2023-12-14.
+  {
+    id: "jb-2023-new-glenn-first-launch-2024",
+    speaker: "Jeff Bezos",
+    claim: "The first launch is one thing and we'll do that in 2024 coming up in this coming year.",
+    said_on: "2023-12-14",
+    source_url: "https://www.youtube.com/watch?v=DcWqzZ3I2cY",
+    source_time: "40:01",
+    deadline: "2024-12-31",
+    status: "partial",
+    evidence_url: "https://www.theregister.com/2025/01/16/new_glenn_reaches_orbit/",
+    checked_on: "2026-11-09",
+    notes: "New Glenn's first flight (NG-1) launched on January 16, 2025, about two weeks after the deadline, and reached orbit; the booster was lost on descent. He repeats the 2024 date at 47:36."
+  },
+  {
+    id: "jb-2023-escapade-launch-2024",
+    speaker: "Jeff Bezos",
+    claim: "[Are both the first test launch and the launch of ESCAPADE explorers to Mars still possible in 2024?] Yeah, I think so. For sure the first launch, and then we'll see if escapade goes on that or not.",
+    said_on: "2023-12-14",
+    source_url: "https://www.youtube.com/watch?v=DcWqzZ3I2cY",
+    source_time: "47:11",
+    deadline: "2024-12-31",
+    status: "partial",
+    evidence_url: "https://spacepolicyonline.com/news/blue-origin-nails-it-ng-2-makes-a-landing-escapade-enroute-to-mars/",
+    checked_on: "2026-11-09",
+    notes: "Said with a hedge (“we'll see”, “I hope escapade too”). NASA's ESCAPADE probes launched on New Glenn's second flight (NG-2) on November 13, 2025, after the deadline."
+  },
+  {
+    id: "jb-2023-alexa-smarter",
+    speaker: "Jeff Bezos",
+    claim: "…and guess what Alexa is about to get a lot smarter.",
+    said_on: "2023-12-14",
+    source_url: "https://www.youtube.com/watch?v=DcWqzZ3I2cY",
+    source_time: "1:53:18",
+    deadline: "2023-12-31",
+    status: "partial",
+    evidence_url: "https://techcrunch.com/2025/02/26/amazon-unveils-a-new-and-improved-alexa-alexa/",
+    checked_on: "2026-11-09",
+    notes: "Amazon unveiled the generative-AI Alexa+ on February 26, 2025, with early access from March 2025, after the deadline. Deadline: “about to” read as the end of 2023. “A lot smarter” has no agreed measure; checked against the Alexa+ launch."
   }
 ];
