@@ -42,7 +42,8 @@
 const CHAINS = {
   "fsd-driverless": "Self-driving with no one at the wheel",
   "optimus-prototype": "Optimus humanoid robot prototype",
-  "humans-to-mars": "People flying to Mars"
+  "humans-to-mars": "People flying to Mars",
+  "ai-exceeds-humans": "AI smarter than all humans combined"
 };
 
 const PREDICTIONS = [
@@ -151,10 +152,156 @@ const PREDICTIONS = [
     checked_on: "2026-11-08",
     notes: "About total Starlink network capacity, with V3 satellites. Deadline: \"two or 3 years\" read as three years from the video's publication date."
   },
+  // Source: "Elon Musk – In 36 months, the cheapest place to put AI will be space", Dwarkesh Patel, YouTube, published 2026-02-05.
+  {
+    id: "em-2026-chips-outpace-power-end-2026",
+    speaker: "Elon Musk",
+    claim: "Towards the end of this year, chip production will probably outpace the ability to turn chips on.",
+    said_on: "2026-02-05",
+    source_url: "https://www.youtube.com/watch?v=BYXbuik3dgA",
+    source_time: "30:38",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "About AI chips piling up because there is not enough electricity for large clusters. He repeats it near the end of the interview. There is no single agreed measure, so it may stay unresolved."
+  },
+  {
+    id: "em-2026-digital-human-emulation-2026",
+    speaker: "Elon Musk",
+    claim: "I'd be surprised by the end of this year if digital human emulation has not been solved.",
+    said_on: "2026-02-05",
+    source_url: "https://www.youtube.com/watch?v=BYXbuik3dgA",
+    source_time: "1:00:39",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "He describes digital human emulation as AI that can do anything a human with access to a computer can do (xAI's MacroHard project). There is no agreed test for \"solved\"."
+  },
+  {
+    id: "em-2026-china-3x-us-electricity-2026",
+    speaker: "Elon Musk",
+    claim: "I think this year China will exceed three times US electricity output.",
+    said_on: "2026-02-05",
+    source_url: "https://www.youtube.com/watch?v=BYXbuik3dgA",
+    source_time: "1:40:22",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "About total electricity generation in 2026. Annual figures are usually published early the following year."
+  },
+  {
+    id: "em-2026-ai5-production-q2-2027",
+    speaker: "Elon Musk",
+    claim: "…to get Tesla AI5 chip design into production and then reaching scale. That'll probably happen around the second quarter-ish of next year, hopefully.",
+    said_on: "2026-02-05",
+    source_url: "https://www.youtube.com/watch?v=BYXbuik3dgA",
+    source_time: "28:47",
+    deadline: "2027-06-30",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "It is not clear whether \"that\" means the start of AI5 production or reaching scale; checked against the start of production. \"Second quarter of next year\" read as Q2 2027."
+  },
+  {
+    id: "em-2026-ai6-within-year-after-ai5",
+    speaker: "Elon Musk",
+    claim: "AI6 would hopefully follow less than a year later.",
+    said_on: "2026-02-05",
+    source_url: "https://www.youtube.com/watch?v=BYXbuik3dgA",
+    source_time: "29:13",
+    deadline: "2028-06-30",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "Follows the AI5 statement (Q2 2027). Deadline: less than a year after the end of Q2 2027."
+  },
+  {
+    id: "em-2026-space-cheapest-for-ai-36-months",
+    speaker: "Elon Musk",
+    claim: "In 36 months, but probably closer to 30 months, the most economically compelling place to put AI will be space.",
+    said_on: "2026-02-05",
+    source_url: "https://www.youtube.com/watch?v=BYXbuik3dgA",
+    source_time: "4:15",
+    deadline: "2029-02-05",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "The line the video is named after; a few seconds earlier he says space will be \"by far the cheapest place to put AI\" in \"36 months or less\". Deadline: 36 months from the video's publication date; the recording date may be earlier."
+  },
+  {
+    id: "em-2026-china-compelling-chips-3-4y",
+    speaker: "Elon Musk",
+    claim: "I think China's going to be making pretty compelling chips in three or four years.",
+    said_on: "2026-02-05",
+    source_url: "https://www.youtube.com/watch?v=BYXbuik3dgA",
+    source_time: "26:12",
+    deadline: "2030-02-05",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "Said about China's access to leading-edge chipmaking equipment. Deadline: \"three or four years\" read as four years from the video's publication date; the recording date may be earlier. \"Compelling\" has no agreed measure."
+  },
+  {
+    id: "em-2026-100gw-chips-by-2030",
+    speaker: "Elon Musk",
+    claim: "We want 100 gigawatts of power and chips that can take 100 gigawatts by 2030.",
+    said_on: "2026-02-05",
+    source_url: "https://www.youtube.com/watch?v=BYXbuik3dgA",
+    source_time: "2:43:00",
+    deadline: "2030-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "About the TeraFab chip plan and space-based compute. Stated as a goal; just before, he says \"we could just flounder in failure… Success is not guaranteed.\""
+  },
+  {
+    id: "em-2026-space-ai-exceeds-earth-5y",
+    speaker: "Elon Musk",
+    claim: "Five years from now, my prediction is we will launch and be operating every year more AI in space than the cumulative total on Earth.",
+    said_on: "2026-02-05",
+    source_url: "https://www.youtube.com/watch?v=BYXbuik3dgA",
+    source_time: "15:53",
+    deadline: "2031-02-05",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "Deadline: five years from the video's publication date; the recording date may be earlier."
+  },
+  {
+    id: "em-2026-space-ai-hundreds-gw-5y",
+    speaker: "Elon Musk",
+    claim: "I would expect it to be at least, five years from now, a few hundred gigawatts per year of AI in space and rising.",
+    said_on: "2026-02-05",
+    source_url: "https://www.youtube.com/watch?v=BYXbuik3dgA",
+    source_time: "16:02",
+    deadline: "2031-02-05",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "Same answer as the previous statement. Deadline: five years from the video's publication date; the recording date may be earlier."
+  },
+  {
+    id: "em-2026-ai-exceeds-humans-5-6y",
+    speaker: "Elon Musk",
+    chain: "ai-exceeds-humans",
+    claim: "I think maybe in five or six years, AI will exceed the sum of all human intelligence.",
+    said_on: "2026-02-05",
+    source_url: "https://www.youtube.com/watch?v=BYXbuik3dgA",
+    source_time: "38:39",
+    deadline: "2032-02-05",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-09",
+    notes: "Deadline: \"five or six years\" read as six years from the video's publication date; the recording date may be earlier. There is no agreed measure of \"the sum of all human intelligence\"."
+  },
   // Source: "The full-length interview with Elon Musk | The Economist", YouTube, published 2026-07-29.
   {
     id: "em-2026-ai-exceeds-humans-5y",
     speaker: "Elon Musk",
+    chain: "ai-exceeds-humans",
     claim: "I think AI may exceed the sum of human intelligence in… around five years… Roughly 5 years is my guess.",
     said_on: "2026-07-29",
     source_url: "https://www.youtube.com/watch?v=XuoqKYxDHVc",
