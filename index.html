@@ -314,7 +314,7 @@
 
   <footer>
     <p>Independent project. Not affiliated with, endorsed by, or produced by any person named here. Quotes are taken from the linked sources; status reflects the evidence shown and the date it was checked.</p>
-    <p id="likes-note" hidden>Reactions are anonymous: no accounts, no cookies, no analytics. To count each reaction once per network, the server keeps a one-way code made from your IP address and the prediction; the address itself is never stored. Reactions show what visitors think; they do not change a prediction&#39;s status.</p>
+    <p id="likes-note" hidden>Reactions are anonymous: no accounts, no cookies, no third-party analytics. To count each reaction once per network, the server keeps a one-way code made from your IP address and the prediction; the address itself is never stored. Reactions show what visitors think; they do not change a prediction&#39;s status. We also count page visits per day, by the site you came from and your country, on our own server; nothing else about the visit is kept.</p>
     <p id="contact-note" hidden>Spotted a wrong quote, have evidence of an outcome, or know a prediction we missed? Use “Report a problem” on a card, or <button type="button" class="link-btn" id="contact-link">send us a message</button>.</p>
   </footer>
   <div id="ts-box" hidden></div>
@@ -1014,6 +1014,40 @@
     document.getElementById("contact-note").hidden = false;
     document.getElementById("contact-link").addEventListener("click", function () { openMessage(null); });
   }
+
+  // ---------- visit counter ----------
+  // One count per browser tab: the referring site's host (not the full address) goes to the Worker,
+  // which keeps daily totals by source and country. Opening the page with #me stops counting this
+  // browser (the site owner's own visits); #notme turns counting back on.
+  (function () {
+    var OWNER_KEY = "sd-owner";
+    function ownerHash() {
+      try {
+        if (location.hash !== "#me" && location.hash !== "#notme") return;
+        if (location.hash === "#me") localStorage.setItem(OWNER_KEY, "1");
+        else localStorage.removeItem(OWNER_KEY);
+        console.info(location.hash === "#me" ? "Visits from this browser are no longer counted." : "Visits from this browser are counted again.");
+        history.replaceState(null, "", location.pathname + location.search);
+      } catch (e) {}
+    }
+    ownerHash();
+    window.addEventListener("hashchange", ownerHash);
+    if (!LIKES_API) return;
+    try {
+      if (localStorage.getItem(OWNER_KEY) === "1") return;
+      if (sessionStorage.getItem("sd-visit")) return;
+      sessionStorage.setItem("sd-visit", "1");
+    } catch (e) {}
+    var ref = "";
+    try { ref = document.referrer ? new URL(document.referrer).hostname : ""; } catch (e) { ref = ""; }
+    if (ref === location.hostname) ref = "";
+    fetch(LIKES_API + "/visit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ref: ref }),
+      keepalive: true
+    }).catch(function () {});
+  })();
 
   // ---------- theme (dark by default) ----------
   var root = document.documentElement;

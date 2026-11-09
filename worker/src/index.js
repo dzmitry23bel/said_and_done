@@ -17,6 +17,12 @@
  *        text: 10-2000 characters; link: optional http(s) URL; website: honeypot, must be empty
  *   Limits: 3 per IP per minute (MSG_LIMITER), 5 per network per day, 300 in total per day.
  *
+ * Visit counter (the page sends it once per browser tab; the owner's browser opts out with #me):
+ *   POST /visit { ref }  -> { ok: true }
+ *        ref: host of document.referrer, or "" for a direct visit
+ *   Stores per day: page opens by source site and country, and the number of different networks
+ *   (a one-way code HMAC(secret, ip|visit|day) that changes daily, deleted after a day).
+ *
  * Spam protection:
  *   - only ids that exist in the published predictions.js are accepted;
  *   - one reaction of each kind per network per prediction: we store HMAC(secret, ip|id),
@@ -58,6 +64,10 @@ export default {
 
       if (request.method === "POST" && url.pathname === "/message") {
         return await handleMessage(request, env, cors);
+      }
+
+      if (request.method === "POST" && url.pathname === "/visit") {
+        return await handleVisit(request, env, cors, origin, allowed);
       }
 
       // Legacy endpoints for the old like button.
@@ -192,6 +202,68 @@ async function handleMessage(request, env, cors) {
   await env.DB.prepare(
     "INSERT INTO messages (created_at, pred_id, topic, body, link, voter) VALUES (?1, ?2, ?3, ?4, ?5, ?6)"
   ).bind(now, id || null, topic, text, link || null, voter).run();
+  return json({ ok: true }, 200, cors);
+}
+
+// ---------- visit counter ----------
+// Where a visitor came from, by the referring site's host. Anything else is "other".
+const SOURCES = [
+  ["x", /(^|\.)(x\.com|twitter\.com|t\.co)$/],
+  ["bluesky", /(^|\.)(bsky\.app|bsky\.social)$/],
+  ["youtube", /(^|\.)(youtube\.com|youtu\.be)$/],
+  ["reddit", /(^|\.)reddit\.com$/],
+  ["hackernews", /(^|\.)ycombinator\.com$/],
+  ["linkedin", /(^|\.)(linkedin\.com|lnkd\.in)$/],
+  ["threads", /(^|\.)threads\.(net|com)$/],
+  ["facebook", /(^|\.)(facebook\.com|fb\.com|instagram\.com)$/],
+  ["telegram", /(^|\.)(t\.me|telegram\.org)$/],
+  ["github", /(^|\.)github\.(com|io)$/],
+  ["search", /(^|\.)(google\.[a-z.]+|bing\.com|duckduckgo\.com|yandex\.[a-z.]+|search\.brave\.com|ecosia\.org|yahoo\.com)$/],
+];
+
+function sourceOf(ref) {
+  const host = typeof ref === "string" ? ref.trim().toLowerCase().slice(0, 253) : "";
+  if (!host) return "direct";
+  for (const [name, re] of SOURCES) if (re.test(host)) return name;
+  return "other";
+}
+
+async function handleVisit(request, env, cors, origin, allowed) {
+  // Only the site itself reports visits.
+  if (!origin || !allowed.includes(origin)) return json({ error: "origin_not_allowed" }, 403, cors);
+  const ip = request.headers.get("CF-Connecting-IP") || "";
+  if (!ip) return json({ error: "no_ip" }, 400, cors);
+  if (env.LIKE_LIMITER) {
+    const { success } = await env.LIKE_LIMITER.limit({ key: ip + "|visit" });
+    if (!success) return json({ ok: true }, 200, cors); // over the limit: not counted
+  }
+  if (!env.LIKE_SECRET) return json({ error: "not_configured" }, 500, cors);
+
+  const raw = await request.text();
+  if (raw.length > 1000) return json({ error: "too_large" }, 413, cors);
+  let body = {};
+  try { body = JSON.parse(raw) || {}; } catch { body = {}; }
+
+  const source = sourceOf(body.ref);
+  const c = request.cf && request.cf.country;
+  const cc = typeof c === "string" && /^[A-Z0-9]{2}$/.test(c) ? c : "XX";
+  const now = Date.now();
+  const day = new Date(now).toISOString().slice(0, 10);
+  const yesterday = new Date(now - DAY_MS).toISOString().slice(0, 10);
+  const visitor = await hmac(env.LIKE_SECRET, ip + "|visit|" + day);
+
+  await env.DB.batch([
+    env.DB.prepare(
+      "INSERT INTO visits (day, source, country, n) VALUES (?1, ?2, ?3, 1) " +
+      "ON CONFLICT(day, source, country) DO UPDATE SET n = n + 1"
+    ).bind(day, source, cc),
+    env.DB.prepare("INSERT OR IGNORE INTO visitors (day, visitor) VALUES (?1, ?2)").bind(day, visitor),
+    env.DB.prepare(
+      "INSERT INTO uniques (day, n) VALUES (?1, (SELECT COUNT(*) FROM visitors WHERE day = ?1)) " +
+      "ON CONFLICT(day) DO UPDATE SET n = excluded.n"
+    ).bind(day),
+    env.DB.prepare("DELETE FROM visitors WHERE day < ?1").bind(yesterday),
+  ]);
   return json({ ok: true }, 200, cors);
 }
 
