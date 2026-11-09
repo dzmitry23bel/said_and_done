@@ -966,5 +966,20 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-09",
     notes: "Blue Origin is private and does not publish its spending; no public evidence of the 2019 figure was found as of the check date. He repeats it at 56:14. Date from the video title (9/13/18); YouTube lists the stream on September 14."
+  },
+
+  // Source: "Interview: Amazon CEO Jeff Bezos", Business Insider Ignition 2014, YouTube, published 2014-12-15.
+  {
+    id: "jb-2014-drones-abroad-first",
+    speaker: "Jeff Bezos",
+    claim: "[Is this a situation where everyone else in the world except Americans is going to get drone deliveries?] I think it is sad but possible that the US could be late. It's highly likely that other countries will do it first. We'll see, maybe I'm wrong.",
+    said_on: "2014-12-15",
+    source_url: "https://www.youtube.com/watch?v=Xx92bUw7WX8",
+    source_time: "37:06",
+    deadline: "",
+    status: "partial",
+    evidence_url: "https://www.engadget.com/2016/12/14/amazon-completes-its-first-drone-powered-delivery/",
+    checked_on: "2026-11-09",
+    notes: "No date was given, so there is no deadline. For Amazon it held: its first Prime Air customer delivery was near Cambridge, England, on December 7, 2016, and US customer deliveries came later. For drone delivery in general it did not: 7-Eleven and Flirtey made the first FAA-approved drone delivery to a US home in Reno on July 22, 2016. He added \"maybe I'm wrong\". Date is the video's publication date; the event may have been earlier."
   }
 ];
