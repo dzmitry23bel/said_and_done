@@ -1022,5 +1022,33 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-09",
     notes: "No deadline: he says it is \"many more than ten years\" away and depends on displays catching up with paper. Lecture at Lake Forest College; the exact day is not confirmed, the video title says March 1998. The video is a re-upload by a private channel."
+  },
+
+  // Source: "Zuckerberg’s $100 Billion Bet", Cheeky Pint, YouTube, 2026-10-13.
+  {
+    id: "mz-2026-hyperion-5gw-couple-years",
+    speaker: "Mark Zuckerberg",
+    claim: "And now we're building this Hyperion cluster in Louisiana that's going to scale to 5 gigawatts. … I guess the Louisiana one will come online over a couple years.",
+    said_on: "2026-10-13",
+    source_url: "https://www.youtube.com/watch?v=XfdIhd1g6EI",
+    source_time: "49:53",
+    deadline: "2028-10-13",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-10",
+    notes: "The second sentence is at 50:35. Deadline: \"a couple years\" read as two years after publication. In the same answer he says the Prometheus cluster in Ohio is scaling to larger than a gigawatt."
+  },
+  {
+    id: "mz-2026-wonder-level-spark-model",
+    speaker: "Mark Zuckerberg",
+    claim: "And we hope to, you know, at some point not too far from now, have a model that is as good as Wonder, but in the Spark form factor.",
+    said_on: "2026-10-13",
+    source_url: "https://www.youtube.com/watch?v=XfdIhd1g6EI",
+    source_time: "23:06",
+    deadline: "",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-10",
+    notes: "Said while explaining that Muse Wonder starts in paid subscriptions because it is bigger and more expensive to serve, and that Muse Spark is the free model. No time frame given, so there is no deadline."
   }
 ];
