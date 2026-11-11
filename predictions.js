@@ -1219,5 +1219,20 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-11",
     notes: "Said while joining the DealBook Summit by video, about AR glasses that put holograms in the world. Deadline is five years after publication."
+  },
+
+  // Source: "Mark Zuckerberg: Future of AI at Meta, Facebook, Instagram, and WhatsApp | Lex Fridman Podcast #383", YouTube, 2023-06-09.
+  {
+    id: "mz-2023-quest3-this-fall",
+    speaker: "Mark Zuckerberg",
+    claim: "We'll give more details of connect, but, but it's coming, it's coming this fall.",
+    said_on: "2023-06-09",
+    source_url: "https://www.youtube.com/watch?v=Ff4fRgnuFgQ",
+    source_time: "1:57:56",
+    deadline: "2023-11-30",
+    status: "happened",
+    evidence_url: "https://www.tomsguide.com/news/meta-quest-3-launches-at-meta-connect-everything-you-need-to-know",
+    checked_on: "2026-11-11",
+    notes: "About Meta Quest 3. It was launched at Meta Connect on September 27, 2023 and shipped on October 10, 2023, from $499. Deadline: \"this fall\" read as the end of November."
   }
 ];
