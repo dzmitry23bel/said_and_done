@@ -1147,5 +1147,46 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-11",
     notes: "About the holographic glasses Theo Von tried in a demo before the interview. Between the two sentences the host asks \"four years or eight years\". Deadline: \"closer to four\" read as four years after publication."
+  },
+
+  // Source: "Mark Zuckerberg on Business Strategy, Parenting, Religion, and More", The Tim Ferriss Show, YouTube, 2022-03-24.
+  {
+    id: "mz-2022-next-headset-eye-tracking",
+    speaker: "Mark Zuckerberg",
+    claim: "…in the the next version that's coming out we have you know sensors for your eyes so you can make realistic eye contact with someone in in virtual reality…",
+    said_on: "2022-03-24",
+    source_url: "https://www.youtube.com/watch?v=x-kALfaofek",
+    source_time: "23:56",
+    deadline: "2022-12-31",
+    status: "happened",
+    evidence_url: "https://www.uploadvr.com/quest-pro-ships-25-october-1500/",
+    checked_on: "2026-11-11",
+    notes: "Meta Quest Pro, with eye and face tracking, was announced on October 11, 2022 and shipped on October 25, 2022. Deadline: \"the next version that's coming out\" read as the end of the year."
+  },
+  {
+    id: "mz-2022-ar-hologram-couch-5y",
+    speaker: "Mark Zuckerberg",
+    claim: "…in the future you know maybe you know five years from now if we were doing this we'll have AR glasses and you know hologram version of me will be on the couch next to you…",
+    said_on: "2022-03-24",
+    source_url: "https://www.youtube.com/watch?v=x-kALfaofek",
+    source_time: "37:06",
+    deadline: "2027-03-24",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-11",
+    notes: "Said about doing this podcast remotely: in about five years he expects AR glasses that show the other person as a hologram in the room. Deadline is five years after publication."
+  },
+  {
+    id: "mz-2022-half-remote-by-2030",
+    speaker: "Mark Zuckerberg",
+    claim: "…we're gonna you know by the end of this decade hopefully have you know 50% or more of the the company basically working distributed and working remotely…",
+    said_on: "2022-03-24",
+    source_url: "https://www.youtube.com/watch?v=x-kALfaofek",
+    source_time: "45:11",
+    deadline: "2030-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-11",
+    notes: "About Meta's own workforce, as part of the company value \"live in the future\"; he says he first set this goal early in the pandemic."
   }
 ];
