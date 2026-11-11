@@ -1050,5 +1050,46 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-10",
     notes: "Said while explaining that Muse Wonder starts in paid subscriptions because it is bigger and more expensive to serve, and that Muse Spark is the free model. No time frame given, so there is no deadline."
+  },
+
+  // Source: "Mark Zuckerberg's Vision For the Future!", The Next Big Thing, YouTube, 2026-09-25.
+  {
+    id: "mz-2026-next-gen-models-soon",
+    speaker: "Mark Zuckerberg",
+    claim: "…now, you know, we're seeing the models get better and better. We have um the next generation launching soon…",
+    said_on: "2026-09-25",
+    source_url: "https://www.youtube.com/watch?v=voGz8FBR-7k",
+    source_time: "1:54",
+    deadline: "2026-12-31",
+    status: "happened",
+    evidence_url: "https://www.digitaltrends.com/computing/meta-goes-toe-to-toe-with-the-big-boys-with-muse-wonder-ai-models/",
+    checked_on: "2026-11-11",
+    notes: "Meta launched Muse Wonder and Muse Wonder Full on October 12, 2026, 17 days after the interview. Deadline: \"soon\" read as the end of the year. The transcript goes on with \"not a connect\", likely \"not at Connect\"; it is left out of the quote."
+  },
+  {
+    id: "mz-2026-confidential-vm-soon",
+    speaker: "Mark Zuckerberg",
+    claim: "So like so it's it's taking us a little bit of time to get that shipped but um but that's coming soon and it's basically going to be the standard of security that people are used to for WhatsApp…",
+    said_on: "2026-09-25",
+    source_url: "https://www.youtube.com/watch?v=voGz8FBR-7k",
+    source_time: "11:44",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-11",
+    notes: "About the Muse Confidential VM: a virtual machine encrypted with a key that only the user holds, so Meta can't read what's in it. Deadline: \"soon\" read as the end of the year. Not launched as of the check date."
+  },
+  {
+    id: "mz-2026-everyone-agent-5y",
+    speaker: "Mark Zuckerberg",
+    claim: "I think you fast forward 5 years, like everyone is going to have an agent that like really intimately understands your goals and everything around you and um and can help you get stuff done.",
+    said_on: "2026-09-25",
+    source_url: "https://www.youtube.com/watch?v=voGz8FBR-7k",
+    source_time: "13:00",
+    deadline: "2031-09-25",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-11",
+    notes: "Deadline is five years after publication."
   }
 ];
