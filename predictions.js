@@ -43,7 +43,8 @@ const CHAINS = {
   "fsd-driverless": "Self-driving with no one at the wheel",
   "optimus-prototype": "Optimus humanoid robot prototype",
   "humans-to-mars": "People flying to Mars",
-  "ai-exceeds-humans": "AI smarter than all humans combined"
+  "ai-exceeds-humans": "AI smarter than all humans combined",
+  "hologram-in-the-room": "Talking to someone as a hologram in the room"
 };
 
 const PREDICTIONS = [
@@ -1166,6 +1167,7 @@ const PREDICTIONS = [
   {
     id: "mz-2022-ar-hologram-couch-5y",
     speaker: "Mark Zuckerberg",
+    chain: "hologram-in-the-room",
     claim: "…in the future you know maybe you know five years from now if we were doing this we'll have AR glasses and you know hologram version of me will be on the couch next to you…",
     said_on: "2022-03-24",
     source_url: "https://www.youtube.com/watch?v=x-kALfaofek",
@@ -1188,5 +1190,34 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-11",
     notes: "About Meta's own workforce, as part of the company value \"live in the future\"; he says he first set this goal early in the pandemic."
+  },
+
+  // Source: "Mark Zuckerberg on the Future of Social Media", New York Times Events (DealBook Summit), YouTube, 2022-12-02.
+  {
+    id: "mz-2022-ar-messages-mind-signal-5y",
+    speaker: "Mark Zuckerberg",
+    claim: "…you could totally see being out in the world and wearing it and you know getting directions as you're driving through through a heads-up display you're getting messages and and being able to respond to them discreetly and seamlessly without having to pull out something or type just by you know sending some you know like a signal from your from your mind um which is sounds wild… but that I'm actually pretty confident is going to happen within the next five years",
+    said_on: "2022-12-02",
+    source_url: "https://www.youtube.com/watch?v=5wk5WPONF7c",
+    source_time: "10:16",
+    deadline: "2027-12-02",
+    status: "happened",
+    evidence_url: "https://www.androidcentral.com/wearables/meta-ray-ban-display-glasses",
+    checked_on: "2026-11-11",
+    notes: "Meta Ray-Ban Display glasses, with a display in the lens, went on sale in the US on September 30, 2025 with the Meta Neural Band, a wristband that reads nerve and muscle signals at the wrist (sEMG) so messages can be read and answered with small finger gestures. \"A signal from your mind\" is his wording for this kind of wristband. Deadline is five years after publication."
+  },
+  {
+    id: "mz-2022-hologram-chair-5y",
+    speaker: "Mark Zuckerberg",
+    chain: "hologram-in-the-room",
+    claim: "…so you know we do a version of this conversation five years from now and instead of me on a on a video conference you have a another chair next to you and I'm just there as a hologram…",
+    said_on: "2022-12-02",
+    source_url: "https://www.youtube.com/watch?v=5wk5WPONF7c",
+    source_time: "8:04",
+    deadline: "2027-12-02",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-11",
+    notes: "Said while joining the DealBook Summit by video, about AR glasses that put holograms in the world. Deadline is five years after publication."
   }
 ];
