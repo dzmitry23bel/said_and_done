@@ -1119,5 +1119,33 @@ const PREDICTIONS = [
     evidence_url: "https://www.jonloomer.com/history-of-facebook-changes/",
     checked_on: "2026-11-11",
     notes: "\"Friend Details\", which asked how you know each friend, launched in January 2006, after the deadline; the source is a third-party timeline that gives only the month. Deadline: \"late this week or next week\" read as the end of the next week. He describes it as bi-directional facts such as taking a class or living in a house together."
+  },
+
+  // Source: "Mark Zuckerberg | This Past Weekend w/ Theo Von #579", YouTube, 2025-04-28.
+  {
+    id: "mz-2025-all-glasses-ai-decade",
+    speaker: "Mark Zuckerberg",
+    claim: "And there's like there's like a billion or two billion people in the world who wear glasses already. M so to me the you know the chance that we look back like a decade from now and like all those glasses aren't AI glasses by that period. It's kind of like like obviously all the flip phones were going to become smartphones…",
+    said_on: "2025-04-28",
+    source_url: "https://www.youtube.com/watch?v=zbfOkhrgxH0",
+    source_time: "1:04:13",
+    deadline: "2035-04-28",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-11",
+    notes: "He frames it as unlikely that, a decade from now, the glasses people already wear won't be AI glasses, comparing it to flip phones becoming smartphones. Deadline is ten years after publication."
+  },
+  {
+    id: "mz-2025-hologram-glasses-product-4y",
+    speaker: "Mark Zuckerberg",
+    claim: "I'm hoping that we'll have a version of that as a product in a few years… Hopefully closer to four um or even less…",
+    said_on: "2025-04-28",
+    source_url: "https://www.youtube.com/watch?v=zbfOkhrgxH0",
+    source_time: "1:06:08",
+    deadline: "2029-04-28",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-11",
+    notes: "About the holographic glasses Theo Von tried in a demo before the interview. Between the two sentences the host asks \"four years or eight years\". Deadline: \"closer to four\" read as four years after publication."
   }
 ];
