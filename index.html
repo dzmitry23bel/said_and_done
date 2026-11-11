@@ -245,8 +245,14 @@
     padding: 32px 16px; margin: 0;
   }
 
-  .poll { margin: 32px 0 0; padding: 18px 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
-  .poll h2 { margin: 0 0 6px; font-size: 1.1rem; }
+  .poll { margin: 0 0 18px; padding: 14px 18px; border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 12px; background: var(--surface); }
+  .poll summary { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; cursor: pointer; list-style: none; }
+  .poll summary::-webkit-details-marker { display: none; }
+  .poll h2 { margin: 0; font-size: 1.05rem; }
+  .poll-cta { font-size: 0.88rem; color: var(--accent); font-weight: 600; white-space: nowrap; }
+  .poll-cta::after { content: " 93"; }
+  .poll details[open] .poll-cta { display: none; }
+  .poll details[open] summary { margin-bottom: 6px; }
   .poll-lead { margin: 0 0 14px; font-size: 0.9rem; color: var(--muted); }
   .poll fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 6px; }
   .poll legend { padding: 0; margin-bottom: 6px; font-size: 0.85rem; color: var(--muted); }
@@ -289,6 +295,38 @@
   </section>
 
   <main>
+    <section class="poll" id="poll" hidden aria-labelledby="poll-title">
+      <details id="poll-details">
+      <summary><h2 id="poll-title">Would you pay for Said &amp; Done?</h2><span class="poll-cta">2 quick questions</span></summary>
+      <p class="poll-lead">Everything here stays free. We're thinking about a paid version with more on top, and want to know if it's worth building.</p>
+      <form class="msg-form" id="poll-form" novalidate>
+        <fieldset>
+          <legend>Pick the one closest to you</legend>
+          <label class="poll-opt"><input type="radio" name="poll-answer" value="month5"> I'd pay $5 a month</label>
+          <label class="poll-opt"><input type="radio" name="poll-answer" value="year48"> I'd pay $48 a year</label>
+          <label class="poll-opt"><input type="radio" name="poll-answer" value="less"> I'd pay, but less than that</label>
+          <label class="poll-opt"><input type="radio" name="poll-answer" value="no"> I wouldn't pay, the free part is enough</label>
+        </fieldset>
+        <fieldset>
+          <legend>What would you want in a paid version? (any number)</legend>
+          <label class="poll-opt"><input type="checkbox" name="poll-wants" value="database"> The full database: every prediction, searchable and downloadable</label>
+          <label class="poll-opt"><input type="checkbox" name="poll-wants" value="analysis"> Deeper write-ups of each prediction and its outcome</label>
+          <label class="poll-opt"><input type="checkbox" name="poll-wants" value="alerts"> Alerts when a deadline arrives or a status changes</label>
+          <label class="poll-opt"><input type="checkbox" name="poll-wants" value="other" id="poll-other-box"> Something else</label>
+          <input id="poll-other" type="text" maxlength="200" placeholder="What would you want?" autocomplete="off" hidden aria-label="Something else: what would you want?">
+        </fieldset>
+        <div class="msg-trap" aria-hidden="true">
+          <label for="poll-website">Leave this empty</label>
+          <input id="poll-website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <p class="msg-privacy">Anonymous: no name or email. To count one answer per network, the server keeps a one-way code made from your network address; the address itself is never stored. Answering again replaces your earlier answer.</p>
+        <p class="msg-status" id="poll-status" role="status" aria-live="polite"></p>
+        <div class="msg-actions">
+          <button type="submit" class="primary" id="poll-send">Send answer</button>
+        </div>
+      </form>
+      </details>
+    </section>
     <div class="controls">
       <div class="field">
         <label for="f-speaker">Speaker</label>
@@ -318,37 +356,6 @@
     <p class="sr-only" id="result-count" aria-live="polite"></p>
     <ul class="list" id="list"></ul>
     <p class="empty" id="empty" hidden></p>
-
-    <section class="poll" id="poll" hidden aria-labelledby="poll-title">
-      <h2 id="poll-title">Would you pay for Said &amp; Done?</h2>
-      <p class="poll-lead">Everything here stays free. We're thinking about a paid version with more on top, and want to know if it's worth building.</p>
-      <form class="msg-form" id="poll-form" novalidate>
-        <fieldset>
-          <legend>Pick the one closest to you</legend>
-          <label class="poll-opt"><input type="radio" name="poll-answer" value="month5"> I'd pay $5 a month</label>
-          <label class="poll-opt"><input type="radio" name="poll-answer" value="year48"> I'd pay $48 a year</label>
-          <label class="poll-opt"><input type="radio" name="poll-answer" value="less"> I'd pay, but less than that</label>
-          <label class="poll-opt"><input type="radio" name="poll-answer" value="no"> I wouldn't pay, the free part is enough</label>
-        </fieldset>
-        <fieldset>
-          <legend>What would you want in a paid version? (any number)</legend>
-          <label class="poll-opt"><input type="checkbox" name="poll-wants" value="database"> The full database: every prediction, searchable and downloadable</label>
-          <label class="poll-opt"><input type="checkbox" name="poll-wants" value="analysis"> Deeper write-ups of each prediction and its outcome</label>
-          <label class="poll-opt"><input type="checkbox" name="poll-wants" value="alerts"> Alerts when a deadline arrives or a status changes</label>
-          <label class="poll-opt"><input type="checkbox" name="poll-wants" value="other" id="poll-other-box"> Something else</label>
-          <input id="poll-other" type="text" maxlength="200" placeholder="What would you want?" autocomplete="off" hidden aria-label="Something else: what would you want?">
-        </fieldset>
-        <div class="msg-trap" aria-hidden="true">
-          <label for="poll-website">Leave this empty</label>
-          <input id="poll-website" type="text" tabindex="-1" autocomplete="off">
-        </div>
-        <p class="msg-privacy">Anonymous: no name or email. To count one answer per network, the server keeps a one-way code made from your network address; the address itself is never stored. Answering again replaces your earlier answer.</p>
-        <p class="msg-status" id="poll-status" role="status" aria-live="polite"></p>
-        <div class="msg-actions">
-          <button type="submit" class="primary" id="poll-send">Send answer</button>
-        </div>
-      </form>
-    </section>
   </main>
 
   <footer>
@@ -1105,8 +1112,9 @@
       status.textContent = text;
       status.className = "msg-status" + (kind ? " is-" + kind : "");
     }
+    // Already answered in this browser: don't show it again at the top of the page.
+    try { if (localStorage.getItem(DONE_KEY)) return; } catch (e) {}
     box.hidden = false;
-    try { if (localStorage.getItem(DONE_KEY)) setStatus("Thanks, your answer is in. You can change it and send again.", "ok"); } catch (e) {}
     otherBox.addEventListener("change", function () {
       other.hidden = !otherBox.checked;
       if (otherBox.checked) other.focus();

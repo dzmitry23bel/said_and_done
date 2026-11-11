@@ -177,7 +177,7 @@ npx wrangler d1 execute said-and-done-likes --remote --command "SELECT country, 
 
 ## Paid-version poll
 
-Below the list there is a short poll: would you pay for a paid version ($5 a month, $48 a year, less, or no), and what would you want in it (full database, deeper write-ups, alerts, something else with up to 200 characters of text). Answers go to the Worker (`POST /poll`) and are stored in D1 (`poll_votes`): one answer per network, keyed by a one-way code `HMAC(secret, ip|poll)`; answering again replaces the earlier answer. The owner's browser (`#me`) sees the poll but does not send answers. Set up with `migrations/0005_poll.sql`.
+Above the list there is a short collapsible poll (hidden in a browser that has already answered): would you pay for a paid version ($5 a month, $48 a year, less, or no), and what would you want in it (full database, deeper write-ups, alerts, something else with up to 200 characters of text). Answers go to the Worker (`POST /poll`) and are stored in D1 (`poll_votes`): one answer per network, keyed by a one-way code `HMAC(secret, ip|poll)`; answering again replaces the earlier answer. The owner's browser (`#me`) sees the poll but does not send answers. Set up with `migrations/0005_poll.sql`.
 
 ```bash
 # answers
