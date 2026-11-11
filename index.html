@@ -245,6 +245,14 @@
     padding: 32px 16px; margin: 0;
   }
 
+  .poll { margin: 32px 0 0; padding: 18px 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+  .poll h2 { margin: 0 0 6px; font-size: 1.1rem; }
+  .poll-lead { margin: 0 0 14px; font-size: 0.9rem; color: var(--muted); }
+  .poll fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .poll legend { padding: 0; margin-bottom: 6px; font-size: 0.85rem; color: var(--muted); }
+  .msg-form .poll-opt { display: flex; gap: 10px; align-items: flex-start; margin: 0; font-size: 0.95rem; color: var(--text); cursor: pointer; }
+  .msg-form .poll-opt input { width: auto; margin-top: 3px; accent-color: var(--accent); }
+  .poll .msg-actions { justify-content: flex-start; }
   footer { margin: 40px 0 32px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--muted); }
   footer p { margin: 0 0 8px; }
 
@@ -310,6 +318,37 @@
     <p class="sr-only" id="result-count" aria-live="polite"></p>
     <ul class="list" id="list"></ul>
     <p class="empty" id="empty" hidden></p>
+
+    <section class="poll" id="poll" hidden aria-labelledby="poll-title">
+      <h2 id="poll-title">Would you pay for Said &amp; Done?</h2>
+      <p class="poll-lead">Everything here stays free. We're thinking about a paid version with more on top, and want to know if it's worth building.</p>
+      <form class="msg-form" id="poll-form" novalidate>
+        <fieldset>
+          <legend>Pick the one closest to you</legend>
+          <label class="poll-opt"><input type="radio" name="poll-answer" value="month5"> I'd pay $5 a month</label>
+          <label class="poll-opt"><input type="radio" name="poll-answer" value="year48"> I'd pay $48 a year</label>
+          <label class="poll-opt"><input type="radio" name="poll-answer" value="less"> I'd pay, but less than that</label>
+          <label class="poll-opt"><input type="radio" name="poll-answer" value="no"> I wouldn't pay, the free part is enough</label>
+        </fieldset>
+        <fieldset>
+          <legend>What would you want in a paid version? (any number)</legend>
+          <label class="poll-opt"><input type="checkbox" name="poll-wants" value="database"> The full database: every prediction, searchable and downloadable</label>
+          <label class="poll-opt"><input type="checkbox" name="poll-wants" value="analysis"> Deeper write-ups of each prediction and its outcome</label>
+          <label class="poll-opt"><input type="checkbox" name="poll-wants" value="alerts"> Alerts when a deadline arrives or a status changes</label>
+          <label class="poll-opt"><input type="checkbox" name="poll-wants" value="other" id="poll-other-box"> Something else</label>
+          <input id="poll-other" type="text" maxlength="200" placeholder="What would you want?" autocomplete="off" hidden aria-label="Something else: what would you want?">
+        </fieldset>
+        <div class="msg-trap" aria-hidden="true">
+          <label for="poll-website">Leave this empty</label>
+          <input id="poll-website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <p class="msg-privacy">Anonymous: no name or email. To count one answer per network, the server keeps a one-way code made from your network address; the address itself is never stored. Answering again replaces your earlier answer.</p>
+        <p class="msg-status" id="poll-status" role="status" aria-live="polite"></p>
+        <div class="msg-actions">
+          <button type="submit" class="primary" id="poll-send">Send answer</button>
+        </div>
+      </form>
+    </section>
   </main>
 
   <footer>
@@ -1047,6 +1086,58 @@
       body: JSON.stringify({ ref: ref }),
       keepalive: true
     }).catch(function () {});
+  })();
+
+  // ---------- paid-version poll ----------
+  // Answers go to the Worker (one per network, a later answer replaces it). The owner's browser
+  // (#me) sees the poll but its answers are not sent.
+  (function () {
+    var box = document.getElementById("poll");
+    if (!LIKES_API || !box) return;
+    var form = document.getElementById("poll-form");
+    var status = document.getElementById("poll-status");
+    var send = document.getElementById("poll-send");
+    var otherBox = document.getElementById("poll-other-box");
+    var other = document.getElementById("poll-other");
+    var DONE_KEY = "sd-poll";
+    function isOwner() { try { return localStorage.getItem("sd-owner") === "1"; } catch (e) { return false; } }
+    function setStatus(text, kind) {
+      status.textContent = text;
+      status.className = "msg-status" + (kind ? " is-" + kind : "");
+    }
+    box.hidden = false;
+    try { if (localStorage.getItem(DONE_KEY)) setStatus("Thanks, your answer is in. You can change it and send again.", "ok"); } catch (e) {}
+    otherBox.addEventListener("change", function () {
+      other.hidden = !otherBox.checked;
+      if (otherBox.checked) other.focus();
+    });
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var picked = form.querySelector('input[name="poll-answer"]:checked');
+      if (!picked) { setStatus("Please pick one of the four answers first.", "error"); return; }
+      var wants = [].map.call(form.querySelectorAll('input[name="poll-wants"]:checked'), function (el) { return el.value; });
+      var body = {
+        answer: picked.value,
+        wants: wants,
+        other: otherBox.checked ? other.value.trim().slice(0, 200) : "",
+        website: document.getElementById("poll-website").value
+      };
+      if (isOwner()) { setStatus("This browser is marked as the site owner's (#me), so the answer was not sent.", "ok"); return; }
+      send.disabled = true;
+      setStatus("Sending…");
+      fetch(LIKES_API + "/poll", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      }).then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        try { localStorage.setItem(DONE_KEY, picked.value); } catch (e) {}
+        setStatus("Thanks, your answer is in.", "ok");
+      }).catch(function (err) {
+        setStatus(String(err).indexOf("429") >= 0 ? "Too many tries in a minute. Please wait a moment." : "Couldn't send your answer. Please try again later.", "error");
+        console.warn("Poll failed", err);
+      }).then(function () { send.disabled = false; });
+    });
   })();
 
   // ---------- theme (dark by default) ----------

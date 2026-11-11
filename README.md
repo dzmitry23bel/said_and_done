@@ -175,6 +175,18 @@ npx wrangler d1 execute said-and-done-likes --remote --command "SELECT source, S
 npx wrangler d1 execute said-and-done-likes --remote --command "SELECT country, SUM(n) AS opens FROM visits WHERE day >= date('now','-7 days') GROUP BY country ORDER BY opens DESC;"
 ```
 
+## Paid-version poll
+
+Below the list there is a short poll: would you pay for a paid version ($5 a month, $48 a year, less, or no), and what would you want in it (full database, deeper write-ups, alerts, something else with up to 200 characters of text). Answers go to the Worker (`POST /poll`) and are stored in D1 (`poll_votes`): one answer per network, keyed by a one-way code `HMAC(secret, ip|poll)`; answering again replaces the earlier answer. The owner's browser (`#me`) sees the poll but does not send answers. Set up with `migrations/0005_poll.sql`.
+
+```bash
+# answers
+npx wrangler d1 execute said-and-done-likes --remote --command "SELECT answer, COUNT(*) AS n FROM poll_votes GROUP BY answer ORDER BY n DESC;"
+
+# what people want (each row is one person's picks)
+npx wrangler d1 execute said-and-done-likes --remote --command "SELECT answer, wants, other, datetime(created_at/1000,'unixepoch') AS at FROM poll_votes ORDER BY created_at DESC;"
+```
+
 ## Messages from visitors
 
 Each card has a **Report a problem** button (wrong quote or source, evidence of the outcome, wrong date, other), and the header and footer have **Contact** (suggest a prediction, a problem with the site, other). Both open the same form: topic, message (10–2000 characters) and an optional link. The form shows only when `LIKES_API` is set.

@@ -23,6 +23,12 @@
  *   Stores per day: page opens by source site and country, and the number of different networks
  *   (a one-way code HMAC(secret, ip|visit|day) that changes daily, deleted after a day).
  *
+ * Paid-version poll (one answer per network; answering again replaces it):
+ *   POST /poll { answer, wants, other?, website? } -> { ok: true }
+ *        answer: "month5" | "year48" | "less" | "no"
+ *        wants:  array of "database" | "analysis" | "alerts" | "other"; other: up to 200 characters
+ *   Limits: MSG_LIMITER per IP; voter = HMAC(secret, ip|poll), the IP is never stored.
+ *
  * Spam protection:
  *   - only ids that exist in the published predictions.js are accepted;
  *   - one reaction of each kind per network per prediction: we store HMAC(secret, ip|id),
@@ -68,6 +74,10 @@ export default {
 
       if (request.method === "POST" && url.pathname === "/visit") {
         return await handleVisit(request, env, cors, origin, allowed);
+      }
+
+      if (request.method === "POST" && url.pathname === "/poll") {
+        return await handlePoll(request, env, cors, origin, allowed);
       }
 
       // Legacy endpoints for the old like button.
@@ -264,6 +274,42 @@ async function handleVisit(request, env, cors, origin, allowed) {
     ).bind(day),
     env.DB.prepare("DELETE FROM visitors WHERE day < ?1").bind(yesterday),
   ]);
+  return json({ ok: true }, 200, cors);
+}
+
+// ---------- paid-version poll ----------
+const POLL_ANSWERS = ["month5", "year48", "less", "no"];
+const POLL_WANTS = ["database", "analysis", "alerts", "other"];
+const POLL_OTHER_MAX = 200;
+
+async function handlePoll(request, env, cors, origin, allowed) {
+  if (!origin || !allowed.includes(origin)) return json({ error: "origin_not_allowed" }, 403, cors);
+  const ip = request.headers.get("CF-Connecting-IP") || "";
+  if (!ip) return json({ error: "no_ip" }, 400, cors);
+  if (env.MSG_LIMITER) {
+    const { success } = await env.MSG_LIMITER.limit({ key: ip + "|poll" });
+    if (!success) return json({ error: "rate_limited" }, 429, cors);
+  }
+  if (!env.LIKE_SECRET) return json({ error: "not_configured" }, 500, cors);
+
+  const raw = await request.text();
+  if (raw.length > 2000) return json({ error: "too_large" }, 413, cors);
+  let body;
+  try { body = JSON.parse(raw); } catch { return json({ error: "bad_json" }, 400, cors); }
+  if (!body || typeof body !== "object") return json({ error: "bad_json" }, 400, cors);
+  if (typeof body.website === "string" && body.website.trim()) return json({ ok: true }, 200, cors); // honeypot
+
+  const answer = POLL_ANSWERS.includes(body.answer) ? body.answer : "";
+  if (!answer) return json({ error: "bad_answer" }, 400, cors);
+  const wants = Array.isArray(body.wants) ? [...new Set(body.wants.filter((w) => POLL_WANTS.includes(w)))] : [];
+  let other = wants.includes("other") ? clean(body.other) : "";
+  if (other.length > POLL_OTHER_MAX) other = other.slice(0, POLL_OTHER_MAX);
+
+  const voter = await hmac(env.LIKE_SECRET, ip + "|poll");
+  await env.DB.prepare(
+    "INSERT INTO poll_votes (voter, created_at, answer, wants, other) VALUES (?1, ?2, ?3, ?4, ?5) " +
+    "ON CONFLICT(voter) DO UPDATE SET created_at = excluded.created_at, answer = excluded.answer, wants = excluded.wants, other = excluded.other"
+  ).bind(voter, Date.now(), answer, wants.join(","), other || null).run();
   return json({ ok: true }, 200, cors);
 }
 
