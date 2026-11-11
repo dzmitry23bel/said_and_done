@@ -1091,5 +1091,33 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-11",
     notes: "Deadline is five years after publication."
+  },
+
+  // Source: "CS50 Lecture by Mark Zuckerberg - 7 December 2005", YouTube, 2005-12-07.
+  {
+    id: "mz-2005-aggregate-stats-next-week",
+    speaker: "Mark Zuckerberg",
+    claim: "I think we're actually going to be releasing something in late this week or next week that shows some aggregate statistics that we think are interesting.",
+    said_on: "2005-12-07",
+    source_url: "https://www.youtube.com/watch?v=xFFs9UgOAlE",
+    source_time: "47:06",
+    deadline: "2005-12-18",
+    status: "partial",
+    evidence_url: "https://waltonian.eastern.edu/archive/facebooks-the-pulse-tracks-music-movies-tv/",
+    checked_on: "2026-11-11",
+    notes: "Facebook's \"The Pulse\", lists of the most popular books, music, films and TV across the site and by school, is described as \"newish\" in a student newspaper article of May 3, 2006. No exact launch date was found, so it is not shown that it came out by the deadline. Deadline: \"late this week or next week\" read as the end of the next week. At 48:30 he repeats it as a plan for the next two weeks."
+  },
+  {
+    id: "mz-2005-relationship-feature-next-week",
+    speaker: "Mark Zuckerberg",
+    claim: "I think another thing that we're going to launch hopefully sometime either late this week or next week, is something that allows people to clarify their relationships with other people.",
+    said_on: "2005-12-07",
+    source_url: "https://www.youtube.com/watch?v=xFFs9UgOAlE",
+    source_time: "48:49",
+    deadline: "2005-12-18",
+    status: "partial",
+    evidence_url: "https://www.jonloomer.com/history-of-facebook-changes/",
+    checked_on: "2026-11-11",
+    notes: "\"Friend Details\", which asked how you know each friend, launched in January 2006, after the deadline; the source is a third-party timeline that gives only the month. Deadline: \"late this week or next week\" read as the end of the next week. He describes it as bi-directional facts such as taking a class or living in a house together."
   }
 ];
