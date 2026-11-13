@@ -1315,5 +1315,33 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-13",
     notes: "Said right after the previous statement. Deadline: the end of 2030, the year he names."
+  },
+
+  // Source: "The Rise and Reckoning of Jensen Huang | The Circuit with Emily Chang", Bloomberg Originals, YouTube, 2026-11-12.
+  {
+    id: "jh-2026-europe-2b-next-week",
+    speaker: "Jensen Huang",
+    claim: "In the last year alone, we have invested $8 billion in European startups. And in the next week, I'm going to announce another two more billion dollars.",
+    said_on: "2026-11-12",
+    source_url: "https://www.youtube.com/watch?v=JW5s9Md4U2U",
+    source_time: "4:53",
+    deadline: "2026-11-19",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-13",
+    notes: "Filmed during his October 2026 Europe tour; Bloomberg reported the $2 billion pledge on October 13, 2026. Deadline: \"the next week\", counted from the film's publication date. About new Nvidia investments in European AI startups; amounts per company were not disclosed at the time of checking."
+  },
+  {
+    id: "jh-2026-doubling-every-year-several-years",
+    speaker: "Jensen Huang",
+    claim: "At the moment, we're kind of doubling every year. And my sense is that we're going to keep doing that as we build out the infrastructure of the world.",
+    said_on: "2026-11-12",
+    source_url: "https://www.youtube.com/watch?v=JW5s9Md4U2U",
+    source_time: "32:58",
+    deadline: "2029-11-12",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-13",
+    notes: "Asked how far out he can see that doubling, he answers at 33:08: \"We're going to do that for several years and then we'll reevaluate.\" Deadline: \"several years\" read as three years after publication. Checked against Nvidia's annual revenue."
   }
 ];
