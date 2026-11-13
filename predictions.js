@@ -1234,5 +1234,86 @@ const PREDICTIONS = [
     evidence_url: "https://www.tomsguide.com/news/meta-quest-3-launches-at-meta-connect-everything-you-need-to-know",
     checked_on: "2026-11-11",
     notes: "About Meta Quest 3. It was launched at Meta Connect on September 27, 2023 and shipped on October 10, 2023, from $499. Deadline: \"this fall\" read as the end of November."
+  },
+
+  // Source: "Elon Musk on DOGE, Optimus, Starlink Smartphones, Evolving with AI, Why the West is Imploding", All-In Podcast, YouTube, 2025-09-09.
+  {
+    id: "em-2025-fsd-v14-next-few-months",
+    speaker: "Elon Musk",
+    claim: "…the software that uh will be released for that is is coming out over the next few months. So version 14 will be the biggest uh upgrade in Tesla software since version 12.",
+    said_on: "2025-09-09",
+    source_url: "https://www.youtube.com/watch?v=qeZqZBRA-6Q",
+    source_time: "15:51",
+    deadline: "2026-03-09",
+    status: "happened",
+    evidence_url: "https://www.notateslaapp.com/software-updates/version/2025.32.8.5/release-notes",
+    checked_on: "2026-11-13",
+    notes: "FSD (Supervised) v14.1 began rolling out to early-access owners of cars with AI4 hardware on October 7, 2025. Deadline: \"the next few months\" read as six months after publication."
+  },
+  {
+    id: "em-2025-starlink-phones-2y",
+    speaker: "Elon Musk",
+    claim: "…that probably is a 2-year time frame. So the phones that um are able to use the spectrum that was acquired probably start shipping in around 2 years.",
+    said_on: "2025-09-09",
+    source_url: "https://www.youtube.com/watch?v=qeZqZBRA-6Q",
+    source_time: "18:05",
+    deadline: "2027-09-09",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-13",
+    notes: "About phones that can use the spectrum SpaceX bought from EchoStar, for high-bandwidth Starlink connectivity straight to the phone; the phone chipsets need new frequencies. Deadline is two years after publication."
+  },
+  {
+    id: "em-2025-recover-ship-next-year",
+    speaker: "Elon Musk",
+    claim: "I I I think we'll recover the ship next year.",
+    said_on: "2025-09-09",
+    source_url: "https://www.youtube.com/watch?v=qeZqZBRA-6Q",
+    source_time: "20:36",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-13",
+    notes: "About recovering the Starship upper stage. \"Next year\" read as the end of 2026."
+  },
+  {
+    id: "em-2025-starship-full-reuse-next-year",
+    speaker: "Elon Musk",
+    claim: "…unless we have some very major setbacks, uh, SpaceX will demonstrate uh, full reusability next year uh, catching both the booster and the ship um, and being able to deliver over 100 tons to a useful orbit.",
+    said_on: "2025-09-09",
+    source_url: "https://www.youtube.com/watch?v=qeZqZBRA-6Q",
+    source_time: "21:23",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-13",
+    notes: "Three parts: catching the booster, catching the ship, and over 100 tons to a useful orbit, with Starship version 3. He repeats \"next year\" for full reusability at 24:05."
+  },
+  {
+    id: "em-2025-ai-smarter-than-any-human-next-year",
+    speaker: "Elon Musk",
+    claim: "I I I I think that we might have AI smarter than any single human at anything as soon as next year.",
+    said_on: "2025-09-09",
+    source_url: "https://www.youtube.com/watch?v=qeZqZBRA-6Q",
+    source_time: "31:11",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-13",
+    notes: "Hedged (\"might… as soon as\"). There is no agreed test for \"smarter than any single human at anything\"."
+  },
+  {
+    id: "em-2025-ai-smarter-than-all-humans-2030",
+    speaker: "Elon Musk",
+    chain: "ai-exceeds-humans",
+    claim: "…and then probably within five like say 2030 probably AI is smarter than the sum of all humans.",
+    said_on: "2025-09-09",
+    source_url: "https://www.youtube.com/watch?v=qeZqZBRA-6Q",
+    source_time: "31:20",
+    deadline: "2030-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-13",
+    notes: "Said right after the previous statement. Deadline: the end of 2030, the year he names."
   }
 ];
