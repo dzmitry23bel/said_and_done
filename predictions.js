@@ -57,10 +57,10 @@ const PREDICTIONS = [
     source_url: "https://www.youtube.com/watch?v=IjWbvz95w08",
     source_time: "43:39",
     deadline: "2026-11-13",
-    status: "pending",
-    evidence_url: "",
-    checked_on: "2026-11-14",
-    notes: "About an attempt to catch the Starship upper stage (Ship 42) with the launch tower arms; the auto-generated transcript reads \"catch up with the tower\". Deadline: \"about a week\" counted from the video's publication date; the recording date may be earlier. Update 2026-11-14: Ship 42 launched on Flight 15 on November 13 at 4:47 p.m. CT, within the week; the booster catch was called off and Booster 22 went into the Gulf. The Ship 42 tower catch is planned for November 14, about 22.5 hours after liftoff, one day after this deadline (KeepTrack, https://keeptrack.space/x-report/spacex-brief-2026-11-14). Status stays pending until the attempt."
+    status: "partial",
+    evidence_url: "https://keeptrack.space/x-report/spacex-brief-2026-11-15",
+    checked_on: "2026-11-15",
+    notes: "About an attempt to catch the Starship upper stage (Ship 42) with the launch tower arms; the auto-generated transcript reads \"catch up with the tower\". Deadline: \"about a week\" counted from the video's publication date; the recording date may be earlier. Ship 42 launched on Flight 15 on November 13 at 4:47 p.m. CT; the booster catch was called off and Booster 22 went into the Gulf. The tower caught Ship 42 on November 14 at about 3:20 p.m. CST, the first catch of a Starship upper stage, one day after this deadline, so partial."
   },
   {
     id: "em-2026-spacex-arr-100b-december",
