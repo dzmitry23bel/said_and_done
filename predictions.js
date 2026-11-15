@@ -1271,10 +1271,10 @@ const PREDICTIONS = [
     source_url: "https://www.youtube.com/watch?v=qeZqZBRA-6Q",
     source_time: "20:36",
     deadline: "2026-12-31",
-    status: "pending",
-    evidence_url: "",
-    checked_on: "2026-11-13",
-    notes: "About recovering the Starship upper stage. \"Next year\" read as the end of 2026."
+    status: "happened",
+    evidence_url: "https://keeptrack.space/x-report/spacex-brief-2026-11-15",
+    checked_on: "2026-11-15",
+    notes: "About recovering the Starship upper stage. \"Next year\" read as the end of 2026. On November 14, 2026, on Flight 15, the launch tower caught Ship 42 after it returned from orbit, the first catch of a Starship upper stage."
   },
   {
     id: "em-2025-starship-full-reuse-next-year",
