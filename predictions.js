@@ -48,6 +48,46 @@ const CHAINS = {
 };
 
 const PREDICTIONS = [
+  // Source: "Conversation with Elon Musk | World Economic Forum Annual Meeting 2026", Davos, 2026-01-22, with Larry Fink.
+  {
+    id: "em-2026-optimus-public-sale-2027",
+    speaker: "Elon Musk",
+    claim: "By the end of next year, I think we'll be selling humanoid robots to the public. That's when we are confident that it's very high reliability, very high safety, and the range of functionality is also very high.",
+    said_on: "2026-01-22",
+    source_url: "https://www.youtube.com/watch?v=IgifEgm1-e0",
+    source_time: "",
+    deadline: "2027-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-16",
+    notes: "About Tesla Optimus. \"End of next year\" read as December 31, 2027. Timestamp left empty: checked against CNBC's live recording (about 20:45 there), whose times differ from the WEF upload."
+  },
+  {
+    id: "em-2026-robotaxi-widespread-us-2026",
+    speaker: "Elon Musk",
+    claim: "And Tesla rolled out a sort of robot taxi service in a few cities. And it'd be very, very widespread by the end of this year within the U.S.",
+    said_on: "2026-01-22",
+    source_url: "https://www.youtube.com/watch?v=IgifEgm1-e0",
+    source_time: "",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-16",
+    notes: "\"Very widespread\" has no agreed test. As of mid-November 2026, news reports count driverless Tesla Robotaxi service in eight cities, all in Texas and Florida. Timestamp left empty: checked against CNBC's live recording (about 22:08 there)."
+  },
+  {
+    id: "em-2026-fsd-europe-next-month",
+    speaker: "Elon Musk",
+    claim: "And then we hope to get supervised full self-driving approval in Europe, hopefully next month.",
+    said_on: "2026-01-22",
+    source_url: "https://www.youtube.com/watch?v=IgifEgm1-e0",
+    source_time: "",
+    deadline: "2026-02-28",
+    status: "partial",
+    evidence_url: "https://electrek.co/2026/04/10/tesla-fsd-supervised-approved-netherlands-rdw-europe/",
+    checked_on: "2026-11-16",
+    notes: "\"Next month\" read as February 2026. The Dutch regulator RDW approved FSD (Supervised) on April 10, 2026, about six weeks late; several EU countries have recognised it since, and EU-wide approval was still pending at the check date. Timestamp left empty: checked against CNBC's live recording (about 22:13 there)."
+  },
   // Source: "Elon Musk Just Predicted the Next 3 Years (Ron Baron Full Interview)", YouTube, published 2026-11-06.
   {
     id: "em-2026-ship42-tower-catch-week",
