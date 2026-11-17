@@ -44,11 +44,53 @@ const CHAINS = {
   "optimus-prototype": "Optimus humanoid robot prototype",
   "humans-to-mars": "People flying to Mars",
   "ai-exceeds-humans": "AI smarter than all humans combined",
-  "hologram-in-the-room": "Talking to someone as a hologram in the room"
+  "hologram-in-the-room": "Talking to someone as a hologram in the room",
+  "ai-smarter-than-any-human": "AI smarter than any single human"
 };
 
 const PREDICTIONS = [
+  // Source: Fox News, "Special Report" with Bret Baier, Blue Origin factory, Cape Canaveral, 2026-10-07.
+  {
+    id: "jb-2026-new-glenn-flies-december",
+    speaker: "Jeff Bezos",
+    claim: "December this year. So, sometime in December. Before Christmas. Probably be December 31st. But December of this year, we're going to fly that vehicle again.",
+    said_on: "2026-10-07",
+    source_url: "https://www.foxnews.com/media/jeff-bezos-reveals-his-vision-americas-next-frontier-ai-moon",
+    source_time: "",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-17",
+    notes: "About New Glenn's return to flight after the May 28, 2026 explosion on the pad. On November 5, 2026 CNBC reported that Blue Origin moved the return to January 2027 (https://www.cnbc.com/2026/11/05/blue-origin-launch-new-glenn.html). Status stays pending until the deadline. Timestamp left empty: the article page has no video time."
+  },
+  {
+    id: "jb-2026-humans-moon-2028",
+    speaker: "Jeff Bezos",
+    claim: "But there's every reason to believe that we can put humans on the moon in 2028.",
+    said_on: "2026-10-07",
+    source_url: "https://www.foxnews.com/media/jeff-bezos-reveals-his-vision-americas-next-frontier-ai-moon",
+    source_time: "",
+    deadline: "2028-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-17",
+    notes: "Said while discussing beating China to the moon and Blue Origin's lunar lander work; \"we\" read as the U.S. effort that Blue Origin is part of. Counts as happened if humans land on the moon by the end of 2028."
+  },
   // Source: "Conversation with Elon Musk | World Economic Forum Annual Meeting 2026", Davos, 2026-01-22, with Larry Fink.
+  {
+    id: "em-2026-ai-smarter-than-any-human-2026",
+    speaker: "Elon Musk",
+    claim: "I think we might have AI that is smarter than any human by the end of this year. And I would say no later than next year.",
+    said_on: "2026-01-22",
+    source_url: "https://www.youtube.com/watch?v=IgifEgm1-e0",
+    source_time: "",
+    deadline: "2026-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-17",
+    notes: "Hedged (\"might\"), with a fallback of \"no later than next year\"; checked against the end of 2026. There is no agreed test for \"smarter than any human\". Timestamp left empty: checked against CNBC's live recording (about 27:09 there).",
+    chain: "ai-smarter-than-any-human"
+  },
   {
     id: "em-2026-optimus-public-sale-2027",
     speaker: "Elon Musk",
@@ -1340,7 +1382,8 @@ const PREDICTIONS = [
     status: "pending",
     evidence_url: "",
     checked_on: "2026-11-13",
-    notes: "Hedged (\"might… as soon as\"). There is no agreed test for \"smarter than any single human at anything\"."
+    notes: "Hedged (\"might… as soon as\"). There is no agreed test for \"smarter than any single human at anything\".",
+    chain: "ai-smarter-than-any-human"
   },
   {
     id: "em-2025-ai-smarter-than-all-humans-2030",
