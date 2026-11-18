@@ -49,6 +49,33 @@ const CHAINS = {
 };
 
 const PREDICTIONS = [
+  // Source: Elon Musk's remarks by video to the G20 Innovation Ministerial, Chapel Hill, North Carolina, September 2026.
+  {
+    id: "em-2026-ai-anything-digital-2027",
+    speaker: "Elon Musk",
+    claim: "And AI will be able to do anything digital, anything that does not require shaping of atoms by hand, probably by the end of next year.",
+    said_on: "2026-09-01",
+    source_url: "https://thelocalreporter.press/world-technology-leaders-discuss-future-at-chapel-hill-g20-innovation-ministerial/",
+    source_time: "",
+    deadline: "2027-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-18",
+    notes: "The ministerial ran September 1-2, 2026; a published transcript dates his remarks September 1. No official video was found; the link is a news report quoting him. \"Anything digital\" has no agreed test."
+  },
+  {
+    id: "em-2026-ai-stockfish-level-software-2027",
+    speaker: "Elon Musk",
+    claim: "So at some point next year is my prediction. Software will be so good… AI software will be so good that it will be Stockfish-level good, meaning that it is impossible for humans to compete in writing software with AI.",
+    said_on: "2026-09-01",
+    source_url: "https://thelocalreporter.press/world-technology-leaders-discuss-future-at-chapel-hill-g20-innovation-ministerial/",
+    source_time: "",
+    deadline: "2027-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-18",
+    notes: "\"Next year\" read as the end of 2027. Same event and date caveat as the record above; the auto-transcript hears \"for here\" where he says \"for humans\"."
+  },
   // Source: Fox News, "Special Report" with Bret Baier, Blue Origin factory, Cape Canaveral, 2026-10-07.
   {
     id: "jb-2026-new-glenn-flies-december",
