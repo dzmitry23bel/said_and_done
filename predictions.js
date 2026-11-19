@@ -49,6 +49,20 @@ const CHAINS = {
 };
 
 const PREDICTIONS = [
+  // Source: "Elon Musk Says He's 'Not MAGA'", The New York Times DealBook Summit, YouTube, 2026-11-18.
+  {
+    id: "em-2026-direct-to-cell-v2-2027",
+    speaker: "Elon Musk",
+    claim: "We'll be launching the SpaceX direct to cell version two constellation starting next year. That will, I think, have 40 times the bandwidth of the current direct to cell version one.",
+    said_on: "2026-11-18",
+    source_url: "https://www.youtube.com/watch?v=zWeT91uH7LI",
+    source_time: "33:39",
+    deadline: "2027-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-19",
+    notes: "Checked against the first launch of direct-to-cell version 2 satellites by the end of 2027; the 40x bandwidth figure is his estimate (\"I think\")."
+  },
   // Source: Elon Musk's remarks by video to the G20 Innovation Ministerial, Chapel Hill, North Carolina, September 2026.
   {
     id: "em-2026-ai-anything-digital-2027",
