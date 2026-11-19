@@ -1453,5 +1453,33 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-13",
     notes: "Asked how far out he can see that doubling, he answers at 33:08: \"We're going to do that for several years and then we'll reevaluate.\" Deadline: \"several years\" read as three years after publication. Checked against Nvidia's annual revenue."
+  },
+
+  // Source: "Elon Musk Says He’s ‘Not MAGA’", The New York Times (DealBook Summit), YouTube, 2026-11-18.
+  {
+    id: "em-2026-direct-to-cell-v2-2027",
+    speaker: "Elon Musk",
+    claim: "…we'll be launching the SpaceX direct to cell version two constellation starting next year. Um, that will, I think, have 40 times the the bandwidth of the current direct to cell version one.",
+    said_on: "2026-11-18",
+    source_url: "https://www.youtube.com/watch?v=zWeT91uH7LI",
+    source_time: "33:33",
+    deadline: "2027-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-19",
+    notes: "About Starlink satellites that connect straight to ordinary phones. Checked against the start of launches of the version two constellation in 2027; the \"40 times\" bandwidth figure is hedged (\"I think\"). \"Next year\" read as the end of 2027."
+  },
+  {
+    id: "em-2026-micro-cell-production-2027",
+    speaker: "Elon Musk",
+    claim: "…we have a design for this and it's it's going into production I think I think next year um uh which is a quite a revolutionary sort of like micro cell tower thing um that that you can just put on your roof like like a like a stalling dish…",
+    said_on: "2026-11-18",
+    source_url: "https://www.youtube.com/watch?v=zWeT91uH7LI",
+    source_time: "35:15",
+    deadline: "2027-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-19",
+    notes: "About small ground stations using the 800 MHz band SpaceX bought, for phone coverage inside buildings where the signal from space is blocked. \"stalling dish\" is the auto-transcript for \"Starlink dish\". \"Next year\" read as the end of 2027."
   }
 ];
