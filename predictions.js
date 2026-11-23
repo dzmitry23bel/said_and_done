@@ -1481,5 +1481,18 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-19",
     notes: "About small ground stations using the 800 MHz band SpaceX bought, for phone coverage inside buildings where the signal from space is blocked. \"stalling dish\" is the auto-transcript for \"Starlink dish\". \"Next year\" read as the end of 2027."
+  },
+  {
+    id: "em-2026-space-superintelligence-compute-100pct",
+    speaker: "Elon Musk",
+    claim: "…in the future, the amount of super intelligence compute that's in space will round up to a hundred percent. Now remember these words, because that sounds like a preposterous thing to say… And I think this is a relatively easy prediction to make and simply a matter of time before that happens.",
+    said_on: "2026-11-18",
+    source_url: "https://www.youtube.com/watch?v=zWeT91uH7LI",
+    source_time: "38:24",
+    deadline: "",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-23",
+    notes: "No date was given, so there is no deadline. \"Super intelligence compute\" is read as AI computing capacity; today the large AI data centers are all on the ground. Checked against the share of AI compute that operates in orbit."
   }
 ];
