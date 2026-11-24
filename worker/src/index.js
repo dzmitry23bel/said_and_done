@@ -18,8 +18,11 @@
  *   Limits: 3 per IP per minute (MSG_LIMITER), 5 per network per day, 300 in total per day.
  *
  * Visit counter (the page sends it once per browser tab; the owner's browser opts out with #me):
- *   POST /visit { ref }  -> { ok: true }
- *        ref: host of document.referrer, or "" for a direct visit
+ *   POST /visit { v: 2, ref, from }  -> { ok: true }
+ *        ref:  host of document.referrer, or "" for a direct visit
+ *        from: tag from our own post links (?from=x); wins over ref when it is a known source
+ *   Automated visits (bot browser names, hosting networks, calls without v: 2) go under the source
+ *   "filtered" and are not in the network count. The browser name and network are not stored.
  *   Stores per day: page opens by source site and country, and the number of different networks
  *   (a one-way code HMAC(secret, ip|visit|day) that changes daily, deleted after a day).
  *
@@ -228,10 +231,27 @@ const SOURCES = [
   ["facebook", /(^|\.)(facebook\.com|fb\.com|instagram\.com)$/],
   ["telegram", /(^|\.)(t\.me|telegram\.org)$/],
   ["github", /(^|\.)github\.(com|io)$/],
+  ["substack", /(^|\.)substack\.com$/],
+  ["tiktok", /(^|\.)tiktok\.com$/],
   ["search", /(^|\.)(google\.[a-z.]+|bing\.com|duckduckgo\.com|yandex\.[a-z.]+|search\.brave\.com|ecosia\.org|yahoo\.com)$/],
 ];
 
-function sourceOf(ref) {
+// Automated traffic. Cloudflare, Akamai and Fastly networks are left out on purpose: iCloud Private
+// Relay sends real people through them. People on a VPN in a hosting network are filtered too.
+const BOT_UA = /bot\b|crawl|spider|slurp|headless|lighthouse|preview|facebookexternalhit|embedly|python|curl|wget|axios|node-fetch|go-http|okhttp|java\/|phantom|puppeteer|playwright|selenium|scrapy|pagespeed|uptime/i;
+const HOSTING = /amazon|\baws\b|google|microsoft|azure|facebook|digitalocean|linode|\bovh|hetzner|oracle|alibaba|tencent|huawei cloud|vultr|choopa|constant company|contabo|leaseweb|scaleway|datacamp|\bm247\b|hostinger|\bionos\b|godaddy|namecheap|hivelocity|equinix|rackspace|colocrossing|quadranet|psychz|servers?\.com|hosting|data ?cent(er|re)|\bvps\b|dedicated server/i;
+const HOME = /google fiber/i; // a home internet provider
+
+function isAutomated(request, body) {
+  if (body.v !== 2) return true;
+  const ua = request.headers.get("User-Agent") || "";
+  if (!ua || BOT_UA.test(ua)) return true;
+  const org = String((request.cf && request.cf.asOrganization) || "");
+  return HOSTING.test(org) && !HOME.test(org);
+}
+
+function sourceOf(ref, from) {
+  if (typeof from === "string" && SOURCES.some(([name]) => name === from)) return from;
   const host = typeof ref === "string" ? ref.trim().toLowerCase().slice(0, 253) : "";
   if (!host) return "direct";
   for (const [name, re] of SOURCES) if (re.test(host)) return name;
@@ -254,26 +274,32 @@ async function handleVisit(request, env, cors, origin, allowed) {
   let body = {};
   try { body = JSON.parse(raw) || {}; } catch { body = {}; }
 
-  const source = sourceOf(body.ref);
+  const automated = isAutomated(request, body);
+  const source = automated ? "filtered" : sourceOf(body.ref, body.from);
   const c = request.cf && request.cf.country;
   const cc = typeof c === "string" && /^[A-Z0-9]{2}$/.test(c) ? c : "XX";
   const now = Date.now();
   const day = new Date(now).toISOString().slice(0, 10);
   const yesterday = new Date(now - DAY_MS).toISOString().slice(0, 10);
-  const visitor = await hmac(env.LIKE_SECRET, ip + "|visit|" + day);
 
-  await env.DB.batch([
+  const writes = [
     env.DB.prepare(
       "INSERT INTO visits (day, source, country, n) VALUES (?1, ?2, ?3, 1) " +
       "ON CONFLICT(day, source, country) DO UPDATE SET n = n + 1"
     ).bind(day, source, cc),
-    env.DB.prepare("INSERT OR IGNORE INTO visitors (day, visitor) VALUES (?1, ?2)").bind(day, visitor),
-    env.DB.prepare(
-      "INSERT INTO uniques (day, n) VALUES (?1, (SELECT COUNT(*) FROM visitors WHERE day = ?1)) " +
-      "ON CONFLICT(day) DO UPDATE SET n = excluded.n"
-    ).bind(day),
     env.DB.prepare("DELETE FROM visitors WHERE day < ?1").bind(yesterday),
-  ]);
+  ];
+  if (!automated) {
+    const visitor = await hmac(env.LIKE_SECRET, ip + "|visit|" + day);
+    writes.push(
+      env.DB.prepare("INSERT OR IGNORE INTO visitors (day, visitor) VALUES (?1, ?2)").bind(day, visitor),
+      env.DB.prepare(
+        "INSERT INTO uniques (day, n) VALUES (?1, (SELECT COUNT(*) FROM visitors WHERE day = ?1)) " +
+        "ON CONFLICT(day) DO UPDATE SET n = excluded.n"
+      ).bind(day)
+    );
+  }
+  await env.DB.batch(writes);
   return json({ ok: true }, 200, cors);
 }
 

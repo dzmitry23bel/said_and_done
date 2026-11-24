@@ -160,19 +160,23 @@ npx wrangler d1 execute said-and-done-likes --remote --command "SELECT * FROM re
 
 ## Visit counter
 
-The page reports one visit per browser tab to the Worker (`POST /visit`), sending only the referring site's host (for example `t.co` or `bsky.app`), never the full address. The Worker stores per UTC day: page opens by source (`x`, `bluesky`, `youtube`, `search`, `direct`, `other`, ...) and country (from Cloudflare), plus the number of different networks. For that count it keeps a one-way code `HMAC(secret, ip|visit|day)` that changes daily and is deleted after a day; the IP itself is never stored. Set up with `migrations/0004_visits.sql`.
+The page reports one visit per browser tab to the Worker (`POST /visit`), after a scroll, tap or key press or 10 seconds in view. It sends only the referring site's host (for example `t.co` or `bsky.app`), never the full address, and the `from` tag of the link. The Worker stores per UTC day: page opens by source (`x`, `bluesky`, `youtube`, `search`, `direct`, `other`, ...) and country (from Cloudflare), plus the number of different networks. For that count it keeps a one-way code `HMAC(secret, ip|visit|day)` that changes daily and is deleted after a day; the IP itself is never stored. Set up with `migrations/0004_visits.sql`.
+
+**Links in posts:** use `https://saidanddone.fyi/?from=x` (also `bluesky`, `substack`, `tiktok`, `youtube` and the other names in `SOURCES`), with a chain: `https://saidanddone.fyi/?from=x#chain=<id>`. The page removes the tag from the address.
+
+**Automated visits** (bot browser names, hosting networks, calls from outside the current page) are stored under the source `filtered` and left out of the network count. This is a heuristic: some bots get through, and people on some VPNs are filtered. Days up to 2026-11-24 were counted without the filter.
 
 **Owner's own visits:** open `https://saidanddone.fyi/#me` once in each browser you use (it sets a flag in that browser's localStorage and the page stops reporting visits). `#notme` turns counting back on. Clearing site data removes the flag.
 
 ```bash
 # visits and different networks per day
-npx wrangler d1 execute said-and-done-likes --remote --command "SELECT v.day, SUM(v.n) AS opens, u.n AS networks FROM visits v LEFT JOIN uniques u ON u.day = v.day GROUP BY v.day ORDER BY v.day DESC LIMIT 30;"
+npx wrangler d1 execute said-and-done-likes --remote --command "SELECT v.day, SUM(v.n) AS opens, u.n AS networks FROM visits v LEFT JOIN uniques u ON u.day = v.day WHERE v.source <> 'filtered' GROUP BY v.day ORDER BY v.day DESC LIMIT 30;"
 
 # where visitors came from, last 7 days
 npx wrangler d1 execute said-and-done-likes --remote --command "SELECT source, SUM(n) AS opens FROM visits WHERE day >= date('now','-7 days') GROUP BY source ORDER BY opens DESC;"
 
 # countries, last 7 days
-npx wrangler d1 execute said-and-done-likes --remote --command "SELECT country, SUM(n) AS opens FROM visits WHERE day >= date('now','-7 days') GROUP BY country ORDER BY opens DESC;"
+npx wrangler d1 execute said-and-done-likes --remote --command "SELECT country, SUM(n) AS opens FROM visits WHERE source <> 'filtered' AND day >= date('now','-7 days') GROUP BY country ORDER BY opens DESC;"
 ```
 
 ## Paid-version poll
