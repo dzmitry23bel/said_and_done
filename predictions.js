@@ -303,6 +303,19 @@ const PREDICTIONS = [
     notes: "About total electricity generation in 2026. Annual figures are usually published early the following year."
   },
   {
+    id: "em-2026-xai-most-likely-leader",
+    speaker: "Elon Musk",
+    claim: "Whichever company can scale hardware the fastest will be the leader. And so I think xAI will be able to scale hardware the fastest and therefore most likely will be the leader.",
+    said_on: "2026-02-05",
+    source_url: "https://www.youtube.com/watch?v=BYXbuik3dgA",
+    source_time: "2:47:04",
+    deadline: "",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-27",
+    notes: "No date was given, so there is no deadline. \"The leader\" is read as the leading AI company. There is no single agreed measure; model rankings, compute and revenue can point different ways."
+  },
+  {
     id: "em-2026-ai5-production-q2-2027",
     speaker: "Elon Musk",
     claim: "…to get Tesla AI5 chip design into production and then reaching scale. That'll probably happen around the second quarter-ish of next year, hopefully.",
