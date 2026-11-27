@@ -1494,5 +1494,84 @@ const PREDICTIONS = [
     evidence_url: "",
     checked_on: "2026-11-23",
     notes: "No date was given, so there is no deadline. \"Super intelligence compute\" is read as AI computing capacity; today the large AI data centers are all on the ground. Checked against the share of AI compute that operates in orbit."
+  },
+  // Source: "Elon Musk on Why the Future Should Make You Glad to Be Alive | TomorrowX Summit", iConnections, 2026-11-18
+  {
+    id: "em-2026-optimus-authentic-demo-2-months",
+    speaker: "Elon Musk",
+    claim: "…so we are going to do a demo and it might be I don't know in a month or two but it's going to be an authentic demo um where what what you see is what you would actually find with Optimus if you were to interact with it day-to-day.",
+    said_on: "2026-11-18",
+    source_url: "https://www.youtube.com/watch?v=DY8clym2-jQ",
+    source_time: "23:42",
+    deadline: "2027-01-18",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-27",
+    notes: "About the Optimus humanoid robot. He contrasted it with other robot demos he called \"staged and pre-programmed\". \"A month or two\" read as the upper end, two months from publication. Checked against a public Optimus demo in that window that Tesla presents as unscripted."
+  },
+  {
+    id: "em-2026-optimus-household-chores-18-months",
+    speaker: "Elon Musk",
+    claim: "I think Optimus will be capable of doing the things you described and in about uh 12 to 18 months.",
+    said_on: "2026-11-18",
+    source_url: "https://www.youtube.com/watch?v=DY8clym2-jQ",
+    source_time: "25:59",
+    deadline: "2028-05-18",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-27",
+    notes: "Answer to a question about a home Optimus that takes out the trash and puts away the dishes; he then described washing, drying and putting away a dirty plate. Repeated at 26:34: \"I think Optimus will be able to do it in 12 to 18 months.\" Range read as the upper end, 18 months from publication. Checked against a public demonstration of Optimus doing these chores, not against home sales."
+  },
+  {
+    id: "em-2026-robotaxi-california-approval-early-2027",
+    speaker: "Elon Musk",
+    claim: "…we're expanding to large large numbers of cyber cabs in other major Texas cities. Um, and then Florida, I think, uh, perhaps early next year, we'll get approval to operate in California.",
+    said_on: "2026-11-18",
+    source_url: "https://www.youtube.com/watch?v=DY8clym2-jQ",
+    source_time: "29:56",
+    deadline: "2027-06-30",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-27",
+    notes: "About Tesla's driverless ride service (Robotaxi, including the Cybercab). From the transcript it is unclear whether \"early next year\" belongs to Florida or to California; the record is checked against approval to operate in California. \"Early next year\" read as the first half of 2027; hedged (\"I think\", \"perhaps\")."
+  },
+  {
+    id: "em-2026-terafab-first-test-chip-june-2027",
+    speaker: "Elon Musk",
+    claim: "…we expect to have the uh the re the sort of research uh fab uh in operation and hopefully make our first uh test chip around June of of next year.",
+    said_on: "2026-11-18",
+    source_url: "https://www.youtube.com/watch?v=DY8clym2-jQ",
+    source_time: "32:08",
+    deadline: "2027-06-30",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-27",
+    notes: "About Terafab, the chip fabrication project announced earlier in 2026. The auto-transcript reads \"make out first\"; read as \"make our first\". Checked against a public report of a first test chip from the Terafab research fab by the end of June 2027."
+  },
+  {
+    id: "em-2026-terafab-volume-production-end-2028",
+    speaker: "Elon Musk",
+    claim: "…and if if all goes well, we should have u we will achieve volume production um towards the end of uh 2028. Um at least for phase one of Terafab…",
+    said_on: "2026-11-18",
+    source_url: "https://www.youtube.com/watch?v=DY8clym2-jQ",
+    source_time: "32:39",
+    deadline: "2028-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-27",
+    notes: "About Terafab, the chip fabrication project. Conditional (\"if all goes well\") and limited to phase one. Checked against volume chip production at Terafab by the end of 2028."
+  },
+  {
+    id: "em-2026-ai-compute-1gw-per-month-end-2027",
+    speaker: "Elon Musk",
+    claim: "…we'll be accelerating that uh next year to over a gigawatt a month of AI or probably at that point super intelligence compute um every month by the end of next year.",
+    said_on: "2026-11-18",
+    source_url: "https://www.youtube.com/watch?v=DY8clym2-jQ",
+    source_time: "40:46",
+    deadline: "2027-12-31",
+    status: "pending",
+    evidence_url: "",
+    checked_on: "2026-11-27",
+    notes: "About the pace of adding AI computing capacity on the ground (\"this is terrestrially\"). He said the current pace is about half a gigawatt a month, measured as power at the power plant. Checked against public figures showing more than one gigawatt of AI compute added per month by the end of 2027."
   }
 ];
